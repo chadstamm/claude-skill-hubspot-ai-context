@@ -549,11 +549,20 @@ button:focus-visible, a:focus-visible {{
 }}
 .header h1 {{
   order: 2;
+  display: flex; flex-direction: column; gap: 6px;
+  margin: 0; text-wrap: balance;
+}}
+.h1-client {{
   font-family: 'Impact', 'Arial Narrow Bold', 'Helvetica Neue', sans-serif;
-  font-size: clamp(38px, 5vw, 56px); font-weight: 400;
+  font-size: clamp(38px, 5vw, 60px); font-weight: 400;
   line-height: 0.95; letter-spacing: 0.01em;
-  text-transform: uppercase;
-  color: var(--ink); text-wrap: balance;
+  text-transform: uppercase; color: var(--accent);
+}}
+.h1-page {{
+  font-family: var(--serif);
+  font-size: clamp(13px, 1.4vw, 16px); font-weight: 700;
+  line-height: 1.2; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--ink);
 }}
 .subtitle {{
   order: 1; font-family: var(--serif);
@@ -952,7 +961,10 @@ document.addEventListener('click', (e) => {
 <div class="container">
   <div class="header">
     {logo_html}
-    <h1>{esc(client_name)} — HubSpot Company Context</h1>
+    <h1>
+      <span class="h1-client">{esc(client_name)}</span>
+      <span class="h1-page">HubSpot Company Context</span>
+    </h1>
     <div class="subtitle">Field-by-field paste sheet · Generated {esc(research_date)}</div>
   </div>
   {body}
