@@ -95,7 +95,7 @@ Run the four-question intake interview. Ask one at a time (never stack). Append 
 *"Are there words or phrases this company specifically avoids in content? (e.g., 'we never say synergy', 'they hate the word disruptive', 'avoid leverage as a verb'.) These go directly into HubSpot's Terms to Avoid field. Skip if unsure."*
 
 **Question 3 — Target audiences.**
-*"Who are the top 3–5 personas this company sells to? A short list — like 'K-12 nutrition directors, hospital foodservice operators, fast casual chain equipment buyers'. This sharpens the ICP synthesis if we generate ICPs in the same run. Skip if unsure."*
+*"Who are the top 3–5 personas this company sells to? A short list — concrete role + segment, like 'VP of Engineering at mid-market SaaS' or 'Director of Operations at multi-site healthcare systems'. This sharpens the ICP synthesis if we generate ICPs in the same run. Skip if unsure."*
 
 **Question 4 — Active campaigns or constraints.**
 *"Any current campaigns, product launches, or competitive moves the AI context should reflect? Things HubSpot's AI shouldn't accidentally contradict. Skip if none."*
@@ -286,7 +286,7 @@ For each confirmed ICP, populate the HubSpot ICP form fields per the schema in `
 
 | Field | Bar |
 |---|---|
-| **Name** | Concrete role + segment, not generic. "K-12 School Nutrition Director" not "School Buyer." |
+| **Name** | Concrete role + segment, not generic. "VP of Engineering at mid-market SaaS" not "Engineering Buyer." |
 | **Job Titles** | 5–10 titles, semicolon-separated. Include senior + mid + procurement variants. Items often contain commas internally (e.g., "Director, Operations / Strategy") — this is why semicolons separate. |
 | **Industry** | 2–4 industry tags. Picklist values where HubSpot enforces them. |
 | **Location** | At least one country/region. US is fine if that's the ICP's primary market. |
@@ -298,7 +298,7 @@ For each confirmed ICP, populate the HubSpot ICP form fields per the schema in `
 
 Plus the two extras (not in HubSpot's Create ICP form but useful for AI context downstream):
 - **Description** — 1–2 sentence summary of who this ICP is and why they buy
-- **Business Type** — operational category (e.g., "Multi-Unit Restaurant Chain", "Healthcare System")
+- **Business Type** — operational category (e.g., "Mid-Market SaaS", "Healthcare System", "Distribution Channel Partner")
 
 ### Phase ICP-3: Generate ICP outputs
 
