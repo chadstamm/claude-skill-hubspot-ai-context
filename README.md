@@ -41,6 +41,21 @@ ln -s ~/code/claude-skill-hubspot-ai-context ~/.claude/skills/hubspot-ai-context
 
 After install, restart Claude Code (or open a new session). The skill auto-discovers — no further wiring required.
 
+## How it works
+
+After install, just describe what you want in any Claude Code session:
+
+> Fill out HubSpot company context for [company.com]
+
+The skill will:
+
+1. **Ask you 4 quick intake questions** (strategic priorities, voice anti-patterns, target audiences, active campaigns) — paste in any context you have, or skip questions you can't answer.
+2. **Crawl the company's website**, research competitors, scan brand reputation.
+3. **Synthesize HubSpot Company Context fields, Brand Voice fields, and 5 ICPs.**
+4. **Output one tabbed HTML paste sheet** at `output/[slug]-hubspot-paste-sheet.html` — three tabs (Brand Kit, Products & Services, ICPs), every value individually copyable.
+
+To skip ICPs, say *"just company context."* To skip the company context and only get ICPs, say *"just the ICPs."*
+
 ## Use
 
 In any Claude Code session, just describe what you want:
