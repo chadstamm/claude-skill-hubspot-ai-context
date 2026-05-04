@@ -232,14 +232,28 @@ Always-verify fields (HubSpot's Breeze sometimes miscategorizes):
 
 ### Phase 5: Generate Outputs
 
-Write four artifacts:
+The skill produces **one tabbed HTML paste sheet** with three tabs:
+- **Tab 1 — Products & Services** (terracotta accent): Value Proposition, Pain Points, Itemized Products
+- **Tab 2 — Brand Kit** (rumo-blue accent): Brand Voice (Personality, Default Tone, Mission, Terms to Avoid, Replacement Rules) + Additional Context (Industry Classification, Customer Sentiment, Competitive Landscape, Content Themes, Tech Stack, Social Responsibility) + Open Items
+- **Tab 3 — ICPs** (signature teal accent): all generated ICP cards
 
-1. **Per-client products reference:** `output/[client-slug]-products.md` — durable, deeper-than-HubSpot record of every product/service from Pass B. Categories at top (table), then per-product blocks with URL, models, dimensions, materials, load ratings, differentiators, and a closing "open product data gaps" section.
-2. **Markdown source:** `output/[client-slug]-hubspot-context.md` — field-by-field paste content as plain markdown.
-3. **Per-client data dict:** `output/[client-slug]-data.json` — structured input for the HTML build script. Generate from synthesis. Schema in `templates/company-context-data.example.json`.
-4. **Branded HTML paste sheet:** Run `scripts/build_company_context_html.py [client-slug]-data.json` → `output/[client-slug]-hubspot-context.html`. Click-to-copy on every individual pill (Personality, Default Tone, Terms to Avoid, Industry-Related Tags, Technologies, Tech Categories, Content Topics, Content Formats), single Copy button on long-form fields. Pain points get individual + Copy-All. Replacement rules get per-token Copy buttons.
+Tabs map directly to HubSpot's UI grouping. Each tab is independently scrollable; alternating accent colors signal which tab is active.
 
-Open `output/[client-slug]-hubspot-context.html` in the default browser.
+Write these files to `output/`:
+
+1. **Per-client products reference:** `[client-slug]-products.md` — durable, deeper-than-HubSpot record of every product/service from Pass B. Categories at top (table), then per-product blocks with URL, models, specs, differentiators, and an "open product data gaps" section.
+2. **Per-client competitors file:** `[client-slug]-competitors.md` — from Phase 3.5.
+3. **Per-client data dict:** `[client-slug]-data.json` — structured input for the HTML build script. Schema in `templates/company-context-data.example.json`.
+4. **ICPs CSV** (only if ICPs are in scope): `[client-slug]-icps.csv` — column order specified in the ICP protocol below.
+5. **Tabbed HTML paste sheet:** Run
+
+   ```
+   python scripts/build_company_context_html.py output/[client-slug]-data.json output/[client-slug]-paste-sheet.html --icps output/[client-slug]-icps.csv
+   ```
+
+   The `--icps` flag is omitted when the user opted to skip ICPs.
+
+Open `output/[client-slug]-paste-sheet.html` in the default browser at the end of the run. **One file. Three tabs. The user clicks between them as they paste each section into HubSpot's matching UI surface.**
 
 ### Phase 6: Hand Off
 
@@ -288,7 +302,7 @@ Plus the two extras (not in HubSpot's Create ICP form but useful for AI context 
 
 ### Phase ICP-3: Generate ICP outputs
 
-**1. Write the CSV** at `output/[client-slug]-icps.csv` with this exact header (column order matters — the build script reads by column name):
+**Write the CSV** at `output/[client-slug]-icps.csv` with this exact header (column order matters — the build script reads by column name):
 
 ```
 "Grouping","Category","Name","Description","Business Type","Job Titles","Industry","Location","Company Size","Revenue","Age Range","Interests","Other","Slug"
@@ -298,20 +312,12 @@ Quote every cell. Newlines inside cells are fine if they're inside the quoted st
 
 `Grouping` and `Category` are display-only labels (e.g., Grouping = the client's industry; Category = "End-User Operator", "Channel Partner", or "Specifier").
 
-**2. Build the HTML paste sheet:**
+**The ICPs render in Tab 3 of the unified tabbed paste sheet** — see Phase 5 for the build script invocation. Do not generate a separate ICP HTML file in the bundled flow. (The standalone script `scripts/build_icp_html.py` exists for ICP-only workflows.)
 
-```
-python scripts/build_icp_html.py output/[client-slug]-icps.csv output/[client-slug]-icps.html
-```
-
-Click-to-copy renders:
+Click-to-copy renders within Tab 3:
 - **Location** as click-to-copy pills (HubSpot's Location field is one-tag-at-a-time)
 - **Job Titles, Industry, Company Size, Revenue, Age Range, Interests** as semicolon-separated text with single Copy buttons
 - **Name, Other, Description, Business Type** as single Copy buttons (long-form text)
-
-**3. Open the HTML in the default browser.**
-
-**4. Hand off** — print a short summary: ICP count, fields-per-ICP synthesized count, fields flagged for client input, and any ICPs the user might want to add/drop after seeing them rendered.
 
 ## Branding
 

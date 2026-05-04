@@ -266,34 +266,200 @@ def render_open_items(items: list) -> str:
 </div>"""
 
 
-def build_html(data: dict, brand: SimpleNamespace) -> str:
+# ---------------------------------------------------------------------------
+# ICP rendering (for the third tab) — mirrors build_icp_html.py logic
+# ---------------------------------------------------------------------------
+
+ICP_FIELD_ORDER = [
+    "Name", "Job Titles", "Industry", "Location", "Company Size",
+    "Revenue", "Age Range", "Interests", "Other", "Description", "Business Type",
+]
+ICP_PILL_FIELDS = {"Location"}
+ICP_SEMICOLON_FIELDS = {"Job Titles", "Industry", "Company Size", "Revenue", "Age Range", "Interests"}
+
+
+def split_items(value: str) -> list:
+    s = (value or "").replace("\n", " ").strip()
+    if not s:
+        return []
+    sep = ";" if ";" in s else ","
+    items = [t.strip() for t in s.split(sep)]
+    return [t for t in items if t]
+
+
+def slugify(text: str) -> str:
+    s = text.lower()
+    s = re.sub(r"[^a-z0-9 \-]", "", s)
+    s = s.replace(" ", "-")
+    return re.sub(r"-+", "-", s).strip("-")
+
+
+def load_icps(csv_path: Path) -> list:
+    import csv
+    if not csv_path or not csv_path.exists():
+        return []
+    with csv_path.open() as f:
+        return list(csv.DictReader(f))
+
+
+def render_icp_pill_field(label: str, value: str) -> str:
+    items = split_items(value)
+    if not items:
+        return ""
+    pills = "".join(
+        f'<button class="pill" data-copy="{attr(i)}" title="Click to copy">'
+        f'<span class="pill-text">{esc(i)}</span><span class="pill-icon">⧉</span></button>'
+        for i in items
+    )
+    join_str = "; ".join(items)
+    return f"""
+<div class="field">
+  <div class="field-label">{esc(label)}</div>
+  <div class="field-hint">Click any tag to copy individually, or use Copy all below.</div>
+  <div class="pills">{pills}</div>
+  <button class="copy-all" data-copy="{attr(join_str)}">Copy all ({len(items)})</button>
+</div>"""
+
+
+def render_icp_semicolon_field(label: str, value: str) -> str:
+    items = split_items(value)
+    if not items:
+        return ""
+    joined = "; ".join(items)
+    return f"""
+<div class="field">
+  <div class="field-label">{esc(label)}</div>
+  <div class="field-value"><p>{esc(joined)}</p></div>
+  <button class="copy-btn" data-copy="{attr(joined)}">Copy</button>
+</div>"""
+
+
+def render_icp_text_field(label: str, value: str) -> str:
+    if not value:
+        return ""
+    paras = re.split(r"\n\s*\n", value.strip())
+    paras_html = "".join(f"<p>{esc(p)}</p>" for p in paras if p)
+    return f"""
+<div class="field">
+  <div class="field-label">{esc(label)}</div>
+  <div class="field-value">{paras_html}</div>
+  <button class="copy-btn" data-copy="{attr(value)}">Copy</button>
+</div>"""
+
+
+def render_icp_field(label: str, value: str) -> str:
+    if not value:
+        return ""
+    if label in ICP_PILL_FIELDS:
+        return render_icp_pill_field(label, value)
+    if label in ICP_SEMICOLON_FIELDS:
+        return render_icp_semicolon_field(label, value)
+    return render_icp_text_field(label, value)
+
+
+def render_icp_card(icp: dict, num: int) -> str:
+    name = (icp.get("Name") or "Unnamed").strip()
+    category = (icp.get("Category") or "").strip()
+    grouping = (icp.get("Grouping") or "").strip()
+    slug = (icp.get("Slug") or slugify(name)).strip()
+    fields_html = "\n".join(render_icp_field(label, icp.get(label, "")) for label in ICP_FIELD_ORDER)
+
+    parts = []
+    for label in ICP_FIELD_ORDER:
+        v = (icp.get(label) or "").strip()
+        if not v:
+            continue
+        if label in (ICP_PILL_FIELDS | ICP_SEMICOLON_FIELDS):
+            v = "; ".join(split_items(v))
+        parts.append(f"=== {label.upper()} ===\n{v}")
+    copy_all_text = "\n\n".join(parts)
+
+    meta = " · ".join(p for p in [grouping, category] if p)
+    return f"""
+<article class="icp" id="icp-{esc(slug)}">
+  <div class="icp-header">
+    <div class="icp-num">{num:02d}</div>
+    <div class="icp-titles">
+      <h2>{esc(name)}</h2>
+      <div class="icp-meta">{esc(meta)}</div>
+    </div>
+    <button class="copy-all" data-copy="{attr(copy_all_text)}">Copy all fields</button>
+  </div>
+  {fields_html}
+</article>"""
+
+
+# ---------------------------------------------------------------------------
+# Build
+# ---------------------------------------------------------------------------
+
+def build_html(data: dict, brand: SimpleNamespace, icps: list = None) -> str:
     client_name = data.get("client_name", "Client")
     research_date = data.get("research_date", "")
 
-    sections = []
-    sections.append(render_text_field("Value Proposition", data.get("value_proposition", "")))
-    sections.append(render_pain_points(data.get("pain_points", [])))
-    sections.append(render_products(data.get("products", [])))
-    sections.append(render_pill_field("Personality (HubSpot picklist — max 4)", data.get("personality", [])))
-    sections.append(render_pill_field("Default Tone (HubSpot picklist — max 4)", data.get("default_tone", [])))
-    sections.append(render_text_field("Mission (≤ 50 words)", data.get("mission", "")))
-    sections.append(render_pill_field("Terms to Avoid (≤ 20 words)", data.get("terms_to_avoid", [])))
-    sections.append(render_replacement_rules(data.get("replacement_rules", []), data.get("replacement_note", "")))
-    sections.append(render_industry_classification(data.get("industry_classification", [])))
-    sections.append(render_pill_field("Industry-Related Tags", data.get("industry_tags", [])))
-    sections.append(render_pill_field("Positive Brand Associations", data.get("positive_associations", [])))
-    sections.append(render_text_field("Negative Brand Associations", data.get("negative_associations_note", "")))
-    sections.append(render_pill_field("Competitive Advantages", data.get("competitive_advantages", [])))
-    sections.append(render_competitors(data.get("competitors", []), data.get("competitors_note", "")))
-    sections.append(render_pill_field("Primary Content Topics", data.get("content_topics", [])))
-    sections.append(render_pill_field("Content Format Types", data.get("content_formats", [])))
-    sections.append(render_pill_field("Technologies", data.get("technologies", [])))
-    sections.append(render_pill_field("Technology Categories", data.get("tech_categories", [])))
-    sections.append(render_text_field("Supported Social Causes", data.get("social_causes", "")))
-    sections.append(render_text_field("Sustainability Initiatives", data.get("sustainability", "")))
-    sections.append(render_open_items(data.get("open_items", [])))
+    # ---- Tab 1: Products & Services ----
+    tab_products_sections = [
+        render_text_field("Value Proposition", data.get("value_proposition", "")),
+        render_pain_points(data.get("pain_points", [])),
+        render_products(data.get("products", [])),
+    ]
+    tab_products = "\n".join(s for s in tab_products_sections if s)
 
-    body = "\n".join(s for s in sections if s)
+    # ---- Tab 2: Brand Kit (Brand Voice + Additional Context) ----
+    brand_voice_sections = [
+        render_pill_field("Personality (HubSpot picklist — max 4)", data.get("personality", [])),
+        render_pill_field("Default Tone (HubSpot picklist — max 4)", data.get("default_tone", [])),
+        render_text_field("Mission (≤ 50 words)", data.get("mission", "")),
+        render_pill_field("Terms to Avoid (≤ 20 words)", data.get("terms_to_avoid", [])),
+        render_replacement_rules(data.get("replacement_rules", []), data.get("replacement_note", "")),
+    ]
+    additional_context_sections = [
+        render_industry_classification(data.get("industry_classification", [])),
+        render_pill_field("Industry-Related Tags", data.get("industry_tags", [])),
+        render_pill_field("Positive Brand Associations", data.get("positive_associations", [])),
+        render_text_field("Negative Brand Associations", data.get("negative_associations_note", "")),
+        render_pill_field("Competitive Advantages", data.get("competitive_advantages", [])),
+        render_competitors(data.get("competitors", []), data.get("competitors_note", "")),
+        render_pill_field("Primary Content Topics", data.get("content_topics", [])),
+        render_pill_field("Content Format Types", data.get("content_formats", [])),
+        render_pill_field("Technologies", data.get("technologies", [])),
+        render_pill_field("Technology Categories", data.get("tech_categories", [])),
+        render_text_field("Supported Social Causes", data.get("social_causes", "")),
+        render_text_field("Sustainability Initiatives", data.get("sustainability", "")),
+    ]
+    open_items_html = render_open_items(data.get("open_items", []))
+    tab_brand = (
+        '<h2 class="tab-section-title">Brand Voice</h2>'
+        + "\n".join(s for s in brand_voice_sections if s)
+        + '<h2 class="tab-section-title">Additional Context</h2>'
+        + "\n".join(s for s in additional_context_sections if s)
+        + (open_items_html if open_items_html else "")
+    )
+
+    # ---- Tab 3: ICPs ----
+    if icps:
+        icp_cards = "\n".join(render_icp_card(icp, i + 1) for i, icp in enumerate(icps))
+        tab_icps = icp_cards
+        icp_count_label = f" ({len(icps)})"
+    else:
+        tab_icps = (
+            '<div class="empty-state"><p>No ICPs included in this run.</p>'
+            '<p class="empty-state-hint">Pass <code>--icps PATH</code> when running this script, '
+            'or trigger the skill with ICPs included to populate this tab.</p></div>'
+        )
+        icp_count_label = ""
+
+    body = f"""
+<div class="tabs">
+  <nav class="tab-nav">
+    <button class="tab-button is-active" data-tab="products">Products &amp; Services</button>
+    <button class="tab-button" data-tab="brand">Brand Kit</button>
+    <button class="tab-button" data-tab="icps">ICPs{icp_count_label}</button>
+  </nav>
+  <section class="tab-panel is-active" data-tab-panel="products">{tab_products}</section>
+  <section class="tab-panel" data-tab-panel="brand">{tab_brand}</section>
+  <section class="tab-panel" data-tab-panel="icps">{tab_icps}</section>
+</div>"""
 
     logo_html = ""
     if brand.LOGO_DATA_URI:
@@ -580,6 +746,127 @@ button:focus-visible, a:focus-visible {{
   font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; color: var(--ink-faint);
 }}
 
+/* ============= TABS ============= */
+.tabs {{ margin-top: 16px; }}
+.tab-nav {{
+  display: flex; gap: 0; margin-bottom: 24px;
+  border-bottom: 1px solid var(--rule);
+  position: sticky; top: 0; z-index: 50;
+  background: var(--paper-warm); padding-top: 8px;
+  backdrop-filter: blur(8px);
+}}
+.tab-button {{
+  background: transparent; border: none; cursor: pointer;
+  font-family: var(--serif); font-size: 12px; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--ink-mute);
+  padding: 16px 20px; position: relative;
+  transition: color 180ms var(--ease);
+}}
+.tab-button:hover {{ color: var(--ink); }}
+.tab-button::after {{
+  content: ''; position: absolute;
+  bottom: -1px; left: 16px; right: 16px;
+  height: 3px; background: transparent;
+  transition: background 200ms var(--ease);
+}}
+/* Tab 1 — Products & Services — terracotta */
+.tab-button[data-tab="products"].is-active {{ color: var(--accent); }}
+.tab-button[data-tab="products"].is-active::after {{ background: var(--accent); }}
+/* Tab 2 — Brand Kit — rumo blue */
+.tab-button[data-tab="brand"].is-active {{ color: var(--rumo); }}
+.tab-button[data-tab="brand"].is-active::after {{ background: var(--rumo); }}
+/* Tab 3 — ICPs — signature teal */
+.tab-button[data-tab="icps"].is-active {{ color: var(--success); }}
+.tab-button[data-tab="icps"].is-active::after {{ background: var(--success); }}
+
+.tab-panel {{ display: none; animation: tab-fade-in 280ms var(--ease); }}
+.tab-panel.is-active {{ display: block; }}
+@keyframes tab-fade-in {{
+  from {{ opacity: 0; transform: translateY(4px); }}
+  to {{ opacity: 1; transform: translateY(0); }}
+}}
+
+/* When the brand tab is active, recolor field card stripes + section labels to rumo */
+.tab-panel[data-tab-panel="brand"].is-active .field::before {{ background: var(--rumo); }}
+.tab-panel[data-tab-panel="brand"].is-active .field-label {{ color: var(--rumo); }}
+.tab-panel[data-tab-panel="brand"].is-active .field-label::after {{ background: var(--rumo-line); }}
+
+/* When the ICPs tab is active, recolor field card stripes + section labels to teal */
+.tab-panel[data-tab-panel="icps"].is-active .icp::before {{ background: var(--success); }}
+.tab-panel[data-tab-panel="icps"].is-active .field-label {{ color: var(--rumo); }}
+.tab-panel[data-tab-panel="icps"].is-active .field-label::after {{ background: var(--rumo-line); }}
+
+.tab-section-title {{
+  font-family: var(--serif); font-size: 11px; font-weight: 700;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 32px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule);
+}}
+.tab-section-title:first-child {{ margin-top: 8px; }}
+
+.empty-state {{
+  background: var(--paper); border: 1px dashed var(--rule);
+  padding: 40px 32px; text-align: center; border-radius: 4px;
+  color: var(--ink-mute);
+}}
+.empty-state p {{ margin: 0 0 8px; }}
+.empty-state-hint {{ font-size: 13px; font-style: italic; }}
+.empty-state code {{
+  font-family: var(--mono); font-size: 12px;
+  background: var(--paper-deep); padding: 2px 6px; border-radius: 3px;
+  color: var(--ink);
+}}
+
+/* ============= ICP CARDS ============= */
+.icp {{
+  position: relative; background: var(--paper);
+  padding: 32px 36px 28px 40px; margin-bottom: 16px;
+  border: 1px solid var(--rule); border-radius: 4px;
+  box-shadow: var(--lift-1);
+  transition: box-shadow 280ms var(--ease);
+}}
+.icp::before {{
+  content: ''; position: absolute;
+  top: 32px; bottom: 32px; left: 0; width: 3px;
+  background: var(--success); border-radius: 0 2px 2px 0;
+  transition: top 280ms var(--ease), bottom 280ms var(--ease);
+}}
+.icp:hover {{ box-shadow: var(--lift-2); }}
+.icp:hover::before {{ top: 24px; bottom: 24px; }}
+.icp-header {{
+  display: flex; align-items: center; gap: 18px;
+  padding-bottom: 18px; margin-bottom: 22px;
+  border-bottom: 1px solid var(--rule);
+}}
+.icp-num {{
+  background: var(--success); color: var(--paper);
+  width: 44px; height: 44px;
+  border-radius: 4px; display: flex; align-items: center; justify-content: center;
+  font-weight: 700; flex-shrink: 0;
+  font-family: var(--mono); font-size: 14px; letter-spacing: 0.04em;
+}}
+.icp-titles {{ flex: 1; }}
+.icp-titles h2 {{
+  margin: 0; font-family: var(--serif); font-weight: 700;
+  font-size: 22px; letter-spacing: -0.01em; color: var(--ink);
+}}
+.icp-meta {{
+  font-family: var(--serif); font-size: 10px; font-weight: 600;
+  color: var(--ink-mute); margin-top: 4px;
+  text-transform: uppercase; letter-spacing: 0.18em;
+}}
+.icp-header .copy-all {{ margin-left: auto; }}
+.icp .field {{
+  background: transparent; box-shadow: none; border: none;
+  padding: 18px 0; margin-bottom: 0;
+  border-bottom: 1px dashed var(--rule); border-radius: 0;
+}}
+.icp .field::before {{ display: none; }}
+.icp .field:last-child {{ border-bottom: none; padding-bottom: 0; }}
+
 @media (max-width: 720px) {{
   body {{ padding: 32px 16px 48px; }}
   .header {{ padding: 40px 28px 32px; }}
@@ -603,13 +890,26 @@ button:focus-visible, a:focus-visible {{
 """
 
     js = """
+// Tab switching
+document.addEventListener('click', (e) => {
+  const tabBtn = e.target.closest('.tab-button');
+  if (tabBtn) {
+    const tab = tabBtn.getAttribute('data-tab');
+    document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('is-active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('is-active'));
+    tabBtn.classList.add('is-active');
+    document.querySelector(`.tab-panel[data-tab-panel="${tab}"]`).classList.add('is-active');
+    return;
+  }
+});
+
+// Click-to-copy
 document.addEventListener('click', (e) => {
   const btn = e.target.closest('[data-copy]');
   if (!btn) return;
   const text = btn.getAttribute('data-copy');
   navigator.clipboard.writeText(text).then(() => {
     btn.classList.add('copied');
-    // Preserve nested structure (pill-text/pill-icon) — flash via a data attr
     const originalHtml = btn.innerHTML;
     if (btn.classList.contains('pill')) {
       btn.innerHTML = '<span class="pill-text">✓ Copied</span>';
@@ -663,9 +963,21 @@ document.addEventListener('click', (e) => {
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Build HubSpot Company Context paste sheet HTML")
-    parser.add_argument("data_path", help="Path to JSON data dict")
-    parser.add_argument("output_path", nargs="?", help="Output HTML path (defaults to alongside data file)")
+    parser = argparse.ArgumentParser(
+        description="Build the HubSpot AI Context paste sheet HTML — a tabbed page covering "
+                    "Products & Services, Brand Kit, and ICPs."
+    )
+    parser.add_argument("data_path", help="Path to JSON data dict (Company Context fields)")
+    parser.add_argument(
+        "--icps",
+        help="Optional path to an ICPs CSV (same schema as templates/icp-library.example.csv). "
+             "When provided, the ICPs tab is populated.",
+        default=None,
+    )
+    parser.add_argument(
+        "output_path", nargs="?",
+        help="Output HTML path (defaults to alongside data file).",
+    )
     args = parser.parse_args()
 
     data_path = Path(args.data_path)
@@ -675,16 +987,25 @@ def main():
 
     data = json.loads(data_path.read_text())
 
+    icps = []
+    if args.icps:
+        icp_path = Path(args.icps)
+        if not icp_path.exists():
+            print(f"Warning: ICP CSV not found: {icp_path} — generating without ICPs.", file=sys.stderr)
+        else:
+            icps = load_icps(icp_path)
+
     if args.output_path:
         out_path = Path(args.output_path)
     else:
         slug = data.get("client_slug", data_path.stem)
-        out_path = data_path.parent / f"{slug}-hubspot-context.html"
+        out_path = data_path.parent / f"{slug}-hubspot-paste-sheet.html"
 
     brand = load_brand()
-    html_str = build_html(data, brand)
+    html_str = build_html(data, brand, icps=icps)
     out_path.write_text(html_str)
-    print(f"Wrote {out_path} ({out_path.stat().st_size:,} bytes)")
+    icp_msg = f", {len(icps)} ICPs" if icps else ""
+    print(f"Wrote {out_path} ({out_path.stat().st_size:,} bytes{icp_msg})")
 
 
 if __name__ == "__main__":
