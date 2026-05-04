@@ -440,24 +440,22 @@ def build_html(data: dict, brand: SimpleNamespace, icps: list = None) -> str:
     if icps:
         icp_cards = "\n".join(render_icp_card(icp, i + 1) for i, icp in enumerate(icps))
         tab_icps = icp_cards
-        icp_count_label = f" ({len(icps)})"
     else:
         tab_icps = (
             '<div class="empty-state"><p>No ICPs included in this run.</p>'
             '<p class="empty-state-hint">Pass <code>--icps PATH</code> when running this script, '
             'or trigger the skill with ICPs included to populate this tab.</p></div>'
         )
-        icp_count_label = ""
 
     body = f"""
 <div class="tabs">
   <nav class="tab-nav">
-    <button class="tab-button is-active" data-tab="products">Products &amp; Services</button>
-    <button class="tab-button" data-tab="brand">Brand Kit</button>
-    <button class="tab-button" data-tab="icps">ICPs{icp_count_label}</button>
+    <button class="tab-button is-active" data-tab="brand">Brand Kit</button>
+    <button class="tab-button" data-tab="products">Products &amp; Services</button>
+    <button class="tab-button" data-tab="icps">ICPs</button>
   </nav>
-  <section class="tab-panel is-active" data-tab-panel="products">{tab_products}</section>
-  <section class="tab-panel" data-tab-panel="brand">{tab_brand}</section>
+  <section class="tab-panel is-active" data-tab-panel="brand">{tab_brand}</section>
+  <section class="tab-panel" data-tab-panel="products">{tab_products}</section>
   <section class="tab-panel" data-tab-panel="icps">{tab_icps}</section>
 </div>"""
 
@@ -478,6 +476,8 @@ def build_html(data: dict, brand: SimpleNamespace, icps: list = None) -> str:
   --ink-faint: #9A9285;
   --rumo: #1A2744;
   --rumo-line: color-mix(in srgb, var(--rumo) 22%, transparent);
+  --tile: #003087;
+  --tile-line: color-mix(in srgb, var(--tile) 22%, transparent);
   --paper: {brand.BG_PRIMARY};
   --paper-warm: {brand.BG_SECONDARY};
   --paper-deep: {brand.BG_TERTIARY};
@@ -773,9 +773,9 @@ button:focus-visible, a:focus-visible {{
 /* Tab 1 — Products & Services — terracotta */
 .tab-button[data-tab="products"].is-active {{ color: var(--accent); }}
 .tab-button[data-tab="products"].is-active::after {{ background: var(--accent); }}
-/* Tab 2 — Brand Kit — rumo blue */
-.tab-button[data-tab="brand"].is-active {{ color: var(--rumo); }}
-.tab-button[data-tab="brand"].is-active::after {{ background: var(--rumo); }}
+/* Tab — Brand Kit — tile blue */
+.tab-button[data-tab="brand"].is-active {{ color: var(--tile); }}
+.tab-button[data-tab="brand"].is-active::after {{ background: var(--tile); }}
 /* Tab 3 — ICPs — signature teal */
 .tab-button[data-tab="icps"].is-active {{ color: var(--success); }}
 .tab-button[data-tab="icps"].is-active::after {{ background: var(--success); }}
@@ -787,10 +787,10 @@ button:focus-visible, a:focus-visible {{
   to {{ opacity: 1; transform: translateY(0); }}
 }}
 
-/* When the brand tab is active, recolor field card stripes + section labels to rumo */
-.tab-panel[data-tab-panel="brand"].is-active .field::before {{ background: var(--rumo); }}
-.tab-panel[data-tab-panel="brand"].is-active .field-label {{ color: var(--rumo); }}
-.tab-panel[data-tab-panel="brand"].is-active .field-label::after {{ background: var(--rumo-line); }}
+/* When the brand tab is active, recolor field card stripes + section labels to tile */
+.tab-panel[data-tab-panel="brand"].is-active .field::before {{ background: var(--tile); }}
+.tab-panel[data-tab-panel="brand"].is-active .field-label {{ color: var(--tile); }}
+.tab-panel[data-tab-panel="brand"].is-active .field-label::after {{ background: var(--tile-line); }}
 
 /* When the ICPs tab is active, recolor field card stripes + section labels to teal */
 .tab-panel[data-tab-panel="icps"].is-active .icp::before {{ background: var(--success); }}
