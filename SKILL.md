@@ -64,16 +64,29 @@ Open the HTML paste sheets in the user's default browser at the end of the run.
 2. **Read the bundled field map** — `references/hubspot-company-context-fields.md`. This is the ground-truth list of HubSpot fields, types, picklist constraints, and character limits. If HubSpot's UI has changed, update this file rather than papering over the change inside the protocol.
 3. **Locate the data-dict template** — `templates/company-context-data.example.json` is the schema the build script consumes.
 
-### Phase 1.5: Greenfield Intake (when no client folder is passed)
+### Phase 1.5: Get Client Context (always run)
 
-If the user hasn't provided a client folder, run a **brief intake interview** before crawling. This closes the gap between what the public website shows and what's actually true operationally — the difference between a 70% accurate paste sheet and a 90%+ accurate one.
+After validating the domain and BEFORE crawling, surface a single up-front question to the user about what context they have. Real-world client context is messy — it might be a Google Doc, a Notion page, scattered notes, a brand brief PDF, or nothing structured. Don't assume `profile.md` exists in a folder somewhere.
 
-**Skip this phase if:**
-- The user passed a client folder path
-- The user explicitly says "skip the questions" or "just crawl the site"
-- A `output/[slug]-quick-context.md` file already exists from a prior run
+**Ask this question — verbatim is fine, paraphrase is fine — once at the start:**
 
-**Otherwise, ask these four questions, ONE AT A TIME (never stack them).** After each answer, append it to `output/[slug]-quick-context.md` under the matching heading.
+*"Before I crawl, do you have any context for this client I should read? You can:*
+- *Paste it directly here (Google Docs content, Notion export, brand brief, sales notes — anything goes)*
+- *Give me a file or folder path and I'll read whatever's there*
+- *Say 'nope' and I'll ask 4 quick questions instead"*
+
+**Branch on the response:**
+
+**Branch A — User pastes content directly.**
+Capture everything they paste. Write it to `output/[slug]-quick-context.md` verbatim under a heading like `## Pasted Context (from user, [date])`. Proceed to Phase 2.
+
+**Branch B — User gives a file or folder path.**
+- If a single file: read the file. Write a copy or summary into `output/[slug]-quick-context.md`.
+- If a folder: read every markdown/text file in the folder (not picky about filenames). Common patterns to favor when present: any file matching `profile`, `voice`, `brand`, `goals`, `notes`, `brief`, `foundation`, `huddle`, or `learnings` in the name. But read ALL `.md`, `.txt`, `.json`, `.csv` in the folder regardless — users name files unpredictably.
+- If the path doesn't exist or has no readable files, fall back to the intake interview (Branch C).
+
+**Branch C — User says "nope" / "no context" / "I don't have anything".**
+Run the four-question intake interview. Ask one at a time (never stack). Append each answer to `output/[slug]-quick-context.md` under the matching heading.
 
 **Question 1 — Strategic priorities.**
 *"What are 1–2 strategic priorities for this company that aren't obvious from their website? Things like: pivoting upmarket, launching a new vertical, consolidating product line, recovering from a launch miss. If you don't know, just say 'skip' and I'll work from the site alone."*
