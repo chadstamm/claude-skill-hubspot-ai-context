@@ -1,4 +1,4 @@
-# hubspot-context — Claude Skill
+# hubspot-ai-context — Claude Skill
 
 Generate HubSpot **Company Context** and **Ideal Customer Profile (ICP)** paste sheets from a website crawl + competitor research. Output is click-to-copy interactive HTML that maps field-for-field to HubSpot's UI.
 
@@ -27,14 +27,14 @@ If you're new to Claude Skills, the short version: a Skill is a folder with a `S
 ### Option 1 — Direct clone
 
 ```bash
-git clone https://github.com/[your-username]/claude-skill-hubspot-context ~/.claude/skills/hubspot-context
+git clone https://github.com/chadstamm/claude-skill-hubspot-ai-context ~/.claude/skills/hubspot-ai-context
 ```
 
 ### Option 2 — Clone elsewhere, then symlink
 
 ```bash
-git clone https://github.com/[your-username]/claude-skill-hubspot-context ~/code/claude-skill-hubspot-context
-ln -s ~/code/claude-skill-hubspot-context ~/.claude/skills/hubspot-context
+git clone https://github.com/chadstamm/claude-skill-hubspot-ai-context ~/code/claude-skill-hubspot-ai-context
+ln -s ~/code/claude-skill-hubspot-ai-context ~/.claude/skills/hubspot-ai-context
 ```
 
 After install, restart Claude Code (or open a new session). The skill auto-discovers — no further wiring required.
@@ -51,7 +51,7 @@ The skill triggers on those phrases. It'll ask for the website URL and optionall
 
 You can also invoke the skill explicitly:
 
-> "Use the hubspot-context skill on example.com"
+> "Use the hubspot-ai-context skill on example.com"
 
 ## What you get
 
@@ -86,7 +86,7 @@ The skill protocol reads these files as ground truth.
 ## Repository structure
 
 ```
-claude-skill-hubspot-context/
+claude-skill-hubspot-ai-context/
 ├── SKILL.md                                # Main skill protocol (Claude reads this)
 ├── README.md                               # This file
 ├── LICENSE                                 # MIT

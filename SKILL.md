@@ -1,5 +1,5 @@
 ---
-name: hubspot-context
+name: hubspot-ai-context
 description: Fill HubSpot's Company Context and Ideal Customer Profile (ICP) pages by crawling a client website, researching competitors and brand reputation, and generating click-to-copy paste-sheet HTML. Use when setting up a new client in HubSpot's AI/Breeze Intelligence layer or when refreshing existing context. Triggers — "fill out company context", "set up HubSpot ICP", "create paste sheet for [client]", "generate Breeze Intelligence context", "research competitors for [client]".
 ---
 
