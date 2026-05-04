@@ -1,0 +1,11 @@
+"Grouping","Category","Name","Description","Business Type","Job Titles","Industry","Location","Company Size","Revenue","Age Range","Interests","Other","Slug"
+"Example Industry","End-User Operator","Example ICP Name","One-paragraph description of who this ICP is and why they buy. Used by HubSpot AI features for context — not always shown in the Create ICP form.","Operational business type (e.g., 'Multi-Unit Restaurant Chain', 'Healthcare System', 'Equipment Distributor')","Title One; Title Two; Title Three; Title Four (semicolons separate, items can contain commas internally like 'Director, Operations / Strategy')","Industry Tag One, Industry Tag Two, Industry Tag Three","United States","51-200, 201-500, 501-1K","$10M-$50M, $50M-$100M, $100M-$500M","35-44, 45-54","First buying motivation as a clause; Second motivation; Third motivation; Fourth motivation; Fifth motivation","PAIN POINTS: Operational pain one. Operational pain two. Operational pain three.
+
+BUYING TRIGGERS: Trigger event that prompts purchase. Another trigger. Another trigger.
+
+DECISION CONTEXT: Who decides, what they evaluate, what wins.","example-icp-name"
+"Example Industry","Channel & Specifier","Example Channel ICP","Channel partners — distributors, dealers, resellers — that move the client's product to operators. Different decision-makers and economics from end users.","Distribution Channel Partner","VP of Sales; VP of Purchasing; Director of Equipment; Category Manager; Project Sales Manager","Distribution, Wholesale, Channel Partner","United States","11-50, 51-200, 201-500","$10M-$50M, $50M-$100M, $100M-$500M","35-44, 45-54","Margin and shelf-velocity per line; Manufacturer support quality; Lead-time reliability; Marketing co-op funds; Spec-side competence","PAIN POINTS: Common channel partner frictions.
+
+BUYING TRIGGERS: When channel partners add or drop a manufacturer line.
+
+DECISION CONTEXT: How channel decisions get made.","example-channel-icp"

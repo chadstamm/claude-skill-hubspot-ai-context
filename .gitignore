@@ -1,0 +1,25 @@
+# Output from skill runs (per-client paste sheets, research files)
+output/
+*.html.bak
+*.csv.bak
+*.json.bak
+*.md.bak
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.python-version
+
+# Node (in case future tooling)
+node_modules/
+
+# Editor
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# Skill-local overrides (users should keep their own brand-override.py outside the repo)
+brand-override.local.py

@@ -1,0 +1,116 @@
+{
+  "_comment": "Schema example for a Company Context data dict. Replace placeholder values with synthesized fields from a real client run. The skill protocol writes this file as `output/[slug]-data.json` during Phase 5; the build script consumes it to produce the HTML paste sheet.",
+
+  "client_name": "Example Company",
+  "client_slug": "example-company",
+  "domain": "example.com",
+  "research_date": "2026-05-04",
+
+  "value_proposition": "One-paragraph value proposition pulled from the homepage hero, About page, and product page synthesis. First-person plural (we/our) when the client speaks in first person on their own site. Operational specificity over hype.",
+
+  "pain_points": [
+    ["Pain point one — short label", "One paragraph describing the operator's pain and how the client addresses it. Pull verbatim site language where possible."],
+    ["Pain point two — short label", "Same shape. Aim for 3–5 pain points covering the breadth of the client's offering."],
+    ["Pain point three — short label", "Each pain point should map to a real product/service or capability the client offers."]
+  ],
+
+  "products": [
+    {
+      "title": "Category 1: [Product or Service Category Name]",
+      "url": "https://example.com/category-1-detail-page",
+      "models": "Specific model numbers, line names, or SKU families if applicable",
+      "blurb": "Operational description of the category — what's in it, who buys it, key specs. Match the depth a sales engineer would write, not a homepage hero."
+    },
+    {
+      "title": "Category 2: [Another Category]",
+      "url": "https://example.com/category-2-detail-page",
+      "models": "Models in this category",
+      "blurb": "Description of category 2."
+    }
+  ],
+
+  "personality": ["Authentic", "Helpful", "Innovative", "Trustworthy"],
+  "personality_note": "All 4 picks must come from HubSpot's Personality picklist (see references/hubspot-company-context-fields.md). Common LLM-invented picks like 'Knowledgeable' or 'Direct' are NOT in the picklist.",
+
+  "default_tone": ["Conversational", "Confident", "Informative", "Matter-of-fact"],
+  "default_tone_note": "All 4 picks must come from HubSpot's Default Tone picklist. Note that 'Direct' is NOT in the picklist — closest analogues are Straightforward, Matter-of-fact, Assertive.",
+
+  "mission": "One paragraph mission statement, capped at 50 words. Pull from the About page or footer if present; otherwise synthesize from value-prop signals.",
+
+  "terms_to_avoid": ["term-one", "term-two", "term-three"],
+  "terms_note": "Word count: count up to 20 words. Add notes about why specific terms are excluded (e.g., 'X is intentionally NOT on this list because it's in the brand tagline').",
+
+  "replacement_rules": [
+    {"from": "incorrect_name_variant", "to": "Correct Brand Name"},
+    {"from": "another_variant", "to": "Correct Brand Name"}
+  ],
+  "replacement_note": "Notes on when these rules should fire (e.g., speech-to-text artifacts from internal calls render the brand as X; auto-correct to Y).",
+
+  "industry_classification": [
+    {"field": "Industry", "value": "Title Case Industry", "note": "Title Case override of any Breeze ALL_CAPS_UNDERSCORE format"},
+    {"field": "Sub-Industry", "value": "Title Case Sub-Industry", "note": "Override Breeze if it miscategorizes"},
+    {"field": "Industry Group", "value": "Title Case Industry Group", "note": "Reflect what the company DOES, not what their customers sell"},
+    {"field": "Business Sector", "value": "Industrials", "note": "Common values: Consumer Discretionary, Consumer Staples, Industrials, Technology, etc."}
+  ],
+
+  "industry_tags": ["b2b", "your_industry", "your_subcategory", "your_market_segment"],
+
+  "positive_associations": [
+    "Strong reputation marker pulled from testimonials, reviews, About-page language",
+    "Operational competency marker (years in business, geographic depth, specialization)",
+    "Differentiator that customers actually mention"
+  ],
+
+  "negative_associations_note": "No significant negative associations found in public web as of [Month YYYY]. Surfaces checked: general web search, Trustpilot, Yelp, BBB-style listings, industry trade press. Caveats: Reddit subforums, Glassdoor, LinkedIn employee posts, BBB direct, and Google Business reviews are not deeply covered by automated WebSearch — for full confidence, manual scan of these surfaces would close the gap.",
+
+  "competitive_advantages": [
+    "Capability or differentiator one",
+    "Capability or differentiator two",
+    "Capability or differentiator three"
+  ],
+
+  "competitors": [
+    {
+      "name": "Competitor One Name",
+      "domain": "www.competitor-one.com",
+      "areas": ["Product Features", "Distribution", "Target Market", "Geographic Coverage"],
+      "note": "Why they compete. Territory or category overlap. Any flag (also-customer, also-partner) if applicable."
+    },
+    {
+      "name": "Competitor Two Name",
+      "domain": "www.competitor-two.com",
+      "areas": ["Brand Recognition", "Distribution", "Pricing"],
+      "note": "Why they compete."
+    }
+  ],
+  "competitors_note": "Researched against [industry directory] + web search [Month YYYY]. Validated against any client-provided competitor knowledge. Flag any competitive lanes (e.g., 'rep-side competitors compete on manufacturer specs; distributor-side competitors compete on operator fulfillment').",
+
+  "content_topics": [
+    "Topic 1 the client publishes about regularly",
+    "Topic 2",
+    "Topic 3"
+  ],
+
+  "content_formats": [
+    "Long-form blog posts (800-1500 words)",
+    "FAQ sections",
+    "Email nurture campaigns",
+    "Social posts",
+    "Case studies"
+  ],
+
+  "technologies": ["HubSpot", "Their CRM", "Their CMS", "Other Tools"],
+  "tech_note": "Notes on tech stack peculiarities, integrations, custom-built tools.",
+  "tech_categories": ["CRM", "Marketing Automation", "CMS", "ERP"],
+
+  "social_causes": "What community/social initiatives the client supports. None explicit on the website is a valid finding.",
+  "sustainability": "Sustainability claims or initiatives. None explicit is a valid finding.",
+
+  "open_items": [
+    "<strong>NPS</strong> — actual score from the client",
+    "<strong>Inclusivity preferences</strong> — confirm the 3 toggle settings (gender-neutral, cultural, idioms)",
+    "<strong>Picklist validations</strong> — flag any picklist values that may need closest-fit override against HubSpot's actual UI",
+    "<strong>Replacement rules scope</strong> — confirm where auto-correction should fire (drafts, publish, both)",
+    "<strong>Anything specific to this client</strong> — open data gaps the client must close"
+  ]
+}
