@@ -548,9 +548,11 @@ button:focus-visible, a:focus-visible {{
   letter-spacing: 0.32em; color: var(--ink-faint); pointer-events: none;
 }}
 .header h1 {{
-  order: 2; font-family: var(--serif);
-  font-size: clamp(28px, 3.5vw, 38px); font-weight: 700;
-  line-height: 1.08; letter-spacing: -0.02em;
+  order: 2;
+  font-family: 'Impact', 'Arial Narrow Bold', 'Helvetica Neue', sans-serif;
+  font-size: clamp(38px, 5vw, 56px); font-weight: 400;
+  line-height: 0.95; letter-spacing: 0.01em;
+  text-transform: uppercase;
   color: var(--ink); text-wrap: balance;
 }}
 .subtitle {{
