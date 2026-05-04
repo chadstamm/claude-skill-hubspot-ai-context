@@ -378,7 +378,6 @@ def render_icp_card(icp: dict, num: int) -> str:
     return f"""
 <article class="icp" id="icp-{esc(slug)}">
   <div class="icp-header">
-    <div class="icp-num">{num:02d}</div>
     <div class="icp-titles">
       <h2>{esc(name)}</h2>
       <div class="icp-meta">{esc(meta)}</div>
@@ -840,13 +839,6 @@ button:focus-visible, a:focus-visible {{
   display: flex; align-items: center; gap: 18px;
   padding-bottom: 18px; margin-bottom: 22px;
   border-bottom: 1px solid var(--rule);
-}}
-.icp-num {{
-  background: var(--success); color: var(--paper);
-  width: 44px; height: 44px;
-  border-radius: 4px; display: flex; align-items: center; justify-content: center;
-  font-weight: 700; flex-shrink: 0;
-  font-family: var(--mono); font-size: 14px; letter-spacing: 0.04em;
 }}
 .icp-titles {{ flex: 1; }}
 .icp-titles h2 {{
