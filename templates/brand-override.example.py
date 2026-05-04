@@ -1,11 +1,11 @@
 """
-Brand override — copy this file into your client folder (or anywhere outside this
-repo) and edit. The build scripts auto-load `brand-override.local.py` from the
-current working directory if present.
+Brand override — copy this file as `brand-override.local.py` into the working
+directory where you'll run the skill. The build scripts auto-load it.
 
-The default palette in the build scripts is intentionally neutral (grayscale +
-single accent). Override any value below to match your brand. Leaving a value as
-None falls back to the default.
+The skill ships with the CS2 brand by default (Chad Stamm — author/maintainer
+brand: terracotta + Yankee blue + Sand + Signature teal, Montserrat + Open Sans).
+This file shows the override structure. Leave a value at None to inherit the
+default.
 """
 
 # Color palette
@@ -23,6 +23,11 @@ SUCCESS_COLOR = "#10b981"         # "Copied" confirmation
 FONT_FAMILY_BODY = '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
 FONT_FAMILY_HEADING = '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
 FONT_FAMILY_MONO = '"JetBrains Mono", "Monaco", "Menlo", monospace'
+
+# Optional Google Fonts URL — set to None to skip the <link> and rely on system
+# fallbacks specified above. The default skill ships Montserrat + Open Sans;
+# match this URL to the font families above.
+GOOGLE_FONTS_URL = "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
 
 # Logo (optional)
 # Provide either a data URI (recommended for self-contained HTML) or a public URL.
