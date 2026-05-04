@@ -1,6 +1,8 @@
 # hubspot-ai-context — Claude Skill
 
-Generate HubSpot **Company Context** and **Ideal Customer Profile (ICP)** paste sheets from a website crawl + competitor research. Output is click-to-copy interactive HTML that maps field-for-field to HubSpot's UI.
+> HubSpot's AI Context layer (Breeze Intelligence + Brand Voice) is powerful but tedious to fill correctly. This skill researches a company end-to-end — site crawl, competitor mapping, brand reputation scan — and generates click-to-copy paste sheets that map field-for-field to HubSpot's UI. Built for the people setting up HubSpot AI for the first time, or refreshing it for clients.
+
+![Example output — HubSpot company context paste sheet](docs/example-output.png)
 
 ## What it does
 
