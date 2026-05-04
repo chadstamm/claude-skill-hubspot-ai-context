@@ -233,14 +233,14 @@ The ICP workflow piggybacks on the same Phase 1–3 (validate, optional intake, 
 
 ### Phase ICP-1: Identify the ICP set
 
-**Default count: 3–7 ICPs.** Fewer than 3 misses meaningful audience segments; more than 7 dilutes the synthesis. If the user explicitly asks for a different count, honor it.
+**Default count: 5 ICPs** (range 3–7 — fewer than 3 misses meaningful segments; more than 7 dilutes synthesis). If the user explicitly asks for a different count, honor it.
 
 Two paths:
 
 - **Pre-built ICP library exists** — the user maintains a per-industry library of ICPs (e.g., a CSV with one row per ICP). Match the client's stated target audiences to library entries. Generate a per-client subset by selecting library rows that match the client's verticals.
 - **Greenfield** — derive ICPs from the website crawl + Phase 1.5 intake answers (especially Question 3 — "top 3-5 personas"). Look for "we serve" language on the homepage, case study verticals, blog audience signals, customer testimonials, and any explicit ICPs in the user's intake. If the client has a multi-channel model (sells direct AND through partners), include both end-users and channel partners.
 
-**Surface the proposed ICP list to the user BEFORE generating outputs.** Format: numbered list with one-line descriptions. Wait for confirmation or adjustment. ICPs are opinionated; the user knows their business.
+**Generate the ICPs directly — do NOT pause for confirmation.** The HTML paste sheet is the review surface. The user inspects there, drops any ICP they don't want by simply not pasting it into HubSpot, or asks for adjustments after seeing the rendered output. Asking permission before doing the work adds friction without adding value.
 
 ### Phase ICP-2: Synthesize fields per ICP
 
