@@ -33,6 +33,17 @@ Optional but improves quality:
 - **Existing client context folder** — if the user already maintains per-client knowledge files (profile, voice profile, goals, etc.), pass the folder path. The skill reads them in addition to the crawl.
 - **Custom field map** — to override the bundled HubSpot field map (e.g., when HubSpot ships new fields).
 
+## Default behavior — Company Context AND ICPs in one run
+
+When the user triggers the skill (e.g., "fill out HubSpot company context for example.com"), the default behavior is to generate **both** the Company Context paste sheet **and** the ICPs in the same run. Reason: both halves share the same crawl, the same client folder reads, and the same Phase 1.5 intake answers. Doing them together is faster, more accurate (the ICPs benefit from the same competitor/reputation research), and matches how HubSpot's UI groups them.
+
+**The user opts OUT explicitly:**
+- "Just the company context" / "skip ICPs" / "company context only" → run Company Context phases only
+- "Just the ICPs" / "skip company context" → run ICP phases only (still does the crawl + research)
+- Otherwise → run both, in this order: Company Context first (Phases 1–5), then ICPs (Phases ICP-1 to ICP-3), then a single combined Phase 6 hand-off.
+
+The user can also adjust ICP count inline ("...and 7 ICPs" / "just 3 ICPs"). Default is 5.
+
 ## Outputs
 
 Always produces, in order:
