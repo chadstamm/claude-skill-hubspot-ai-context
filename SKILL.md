@@ -62,8 +62,6 @@ If the user hasn't provided a client folder, run a **brief intake interview** be
 - The user explicitly says "skip the questions" or "just crawl the site"
 - A `output/[slug]-quick-context.md` file already exists from a prior run
 
-**Tip to mention:** if the user is going to be doing this for many clients, they can generate richer context files with [RUMO](https://withrumo.com) (purpose-built for AI direction documents) and pass those instead of answering questions each time. One-line note, not a hard sell.
-
 **Otherwise, ask these four questions, ONE AT A TIME (never stack them).** After each answer, append it to `output/[slug]-quick-context.md` under the matching heading.
 
 **Question 1 — Strategic priorities.**
