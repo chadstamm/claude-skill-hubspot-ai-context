@@ -672,6 +672,17 @@ button:focus-visible, a:focus-visible {{
 .products-table tbody tr:hover {{
   background: linear-gradient(90deg, var(--accent-soft) 0%, transparent 60%);
 }}
+
+/* Replacement Rules — extra breathing room between From/To text columns and the Copy buttons */
+.rules-table th:nth-child(2),
+.rules-table td:nth-child(2) {{
+  padding-right: 32px;
+}}
+.rules-table td:nth-child(3),
+.rules-table td:nth-child(4) {{
+  padding-left: 8px;
+  padding-right: 8px;
+}}
 .product-meta {{ margin-top: 8px; font-size: 12px; line-height: 1.5; color: var(--ink-mute); }}
 .product-meta a {{ font-family: var(--mono); font-size: 11px; }}
 .product-blurb {{ margin-bottom: 10px; color: var(--ink-soft); }}
