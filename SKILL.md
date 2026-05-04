@@ -53,6 +53,53 @@ Open the HTML paste sheets in the user's default browser at the end of the run.
 2. **Read the bundled field map** — `references/hubspot-company-context-fields.md`. This is the ground-truth list of HubSpot fields, types, picklist constraints, and character limits. If HubSpot's UI has changed, update this file rather than papering over the change inside the protocol.
 3. **Locate the data-dict template** — `templates/company-context-data.example.json` is the schema the build script consumes.
 
+### Phase 1.5: Greenfield Intake (when no client folder is passed)
+
+If the user hasn't provided a client folder, run a **brief intake interview** before crawling. This closes the gap between what the public website shows and what's actually true operationally — the difference between a 70% accurate paste sheet and a 90%+ accurate one.
+
+**Skip this phase if:**
+- The user passed a client folder path
+- The user explicitly says "skip the questions" or "just crawl the site"
+- A `output/[slug]-quick-context.md` file already exists from a prior run
+
+**Tip to mention:** if the user is going to be doing this for many clients, they can generate richer context files with [RUMO](https://withrumo.com) (purpose-built for AI direction documents) and pass those instead of answering questions each time. One-line note, not a hard sell.
+
+**Otherwise, ask these four questions, ONE AT A TIME (never stack them).** After each answer, append it to `output/[slug]-quick-context.md` under the matching heading.
+
+**Question 1 — Strategic priorities.**
+*"What are 1–2 strategic priorities for this company that aren't obvious from their website? Things like: pivoting upmarket, launching a new vertical, consolidating product line, recovering from a launch miss. If you don't know, just say 'skip' and I'll work from the site alone."*
+
+**Question 2 — Voice anti-patterns.**
+*"Are there words or phrases this company specifically avoids in content? (e.g., 'we never say synergy', 'they hate the word disruptive', 'avoid leverage as a verb'.) These go directly into HubSpot's Terms to Avoid field. Skip if unsure."*
+
+**Question 3 — Target audiences.**
+*"Who are the top 3–5 personas this company sells to? A short list — like 'K-12 nutrition directors, hospital foodservice operators, fast casual chain equipment buyers'. This sharpens the ICP synthesis if we generate ICPs in the same run. Skip if unsure."*
+
+**Question 4 — Active campaigns or constraints.**
+*"Any current campaigns, product launches, or competitive moves the AI context should reflect? Things HubSpot's AI shouldn't accidentally contradict. Skip if none."*
+
+After all four are answered (including skips), confirm and proceed to Phase 2.
+
+The `quick-context.md` file structure:
+
+```markdown
+# [Client Name] — Quick Context (intake interview, [date])
+
+## Strategic priorities
+[user's answer]
+
+## Voice anti-patterns
+[user's answer]
+
+## Target audiences
+[user's answer]
+
+## Active campaigns
+[user's answer]
+```
+
+Phase 3 reads this file the same way it reads a real client folder — the synthesis treats user-provided answers as authoritative.
+
 ### Phase 2: Crawl the Site — Two Required Passes
 
 **Pass A: Discovery (parallel)**
@@ -78,9 +125,12 @@ If still under-supplied for any field, pull 3–5 signature blog posts, case stu
 
 **Why two passes:** A homepage product list yields one-line summaries. The HubSpot Itemized Products field is one of the most-used fields downstream by Breeze, AI search, and sales — depth matters.
 
-### Phase 3: Read Existing Client Context (if provided)
+### Phase 3: Read Existing Client Context
 
-If the user passed an existing client folder, read in parallel any of these files that exist:
+Sources, in priority order (read all that exist, in parallel):
+
+1. **Quick-context file** from Phase 1.5 — `output/[slug]-quick-context.md`. Treat user-provided answers as authoritative.
+2. **Client folder** — if the user passed a folder path, read in parallel any of these files that exist:
 - `profile.md` — operational profile, ICPs, contacts, org structure
 - `voice-profile.md` — written/blog voice analysis
 - `voice-learnings.md` — voice corrections accumulated over time
@@ -181,50 +231,73 @@ Then stop. Don't ask "want me to do X next?" — let the user direct the next st
 
 ## Protocol — ICP Paste Sheet
 
-The ICP workflow piggybacks on the same Phase 1–3 (validate, crawl, read folder). After Phase 3, branch:
+The ICP workflow piggybacks on the same Phase 1–3 (validate, optional intake, crawl, read folder/quick-context). After Phase 3, branch:
 
 ### Phase ICP-1: Identify the ICP set
 
+**Default count: 3–7 ICPs.** Fewer than 3 misses meaningful audience segments; more than 7 dilutes the synthesis. If the user explicitly asks for a different count, honor it.
+
 Two paths:
 
-- **Pre-built ICP library exists** — the user maintains a per-industry library of ICPs (e.g., a CSV with one row per ICP). Match the client's stated target audiences to library entries. Generate a per-client subset.
-- **Greenfield** — derive ICPs from the website crawl + folder. Look for "we serve" language, case study verticals, blog audience signals, customer testimonials.
+- **Pre-built ICP library exists** — the user maintains a per-industry library of ICPs (e.g., a CSV with one row per ICP). Match the client's stated target audiences to library entries. Generate a per-client subset by selecting library rows that match the client's verticals.
+- **Greenfield** — derive ICPs from the website crawl + Phase 1.5 intake answers (especially Question 3 — "top 3-5 personas"). Look for "we serve" language on the homepage, case study verticals, blog audience signals, customer testimonials, and any explicit ICPs in the user's intake. If the client has a multi-channel model (sells direct AND through partners), include both end-users and channel partners.
 
-In both cases, surface the proposed ICP set to the user for confirmation BEFORE generating outputs. ICPs are opinionated; let the client validate.
+**Surface the proposed ICP list to the user BEFORE generating outputs.** Format: numbered list with one-line descriptions. Wait for confirmation or adjustment. ICPs are opinionated; the user knows their business.
 
 ### Phase ICP-2: Synthesize fields per ICP
 
-For each confirmed ICP, populate the HubSpot ICP form fields:
-- **Name** (required)
-- **Job Titles** (semicolon-separated; long phrases — items often contain commas internally)
-- **Industry** (semicolon-separated)
-- **Location** (HubSpot picklist — e.g., country tags)
-- **Company Size** (HubSpot picklist — e.g., "1-10, 11-50, 51-200, 201-500, 501-1K, 1K-5K, 5K-10K, 10K-50K, 50K-100K, 100K+")
-- **Revenue** (HubSpot picklist — e.g., "Less than $1M, $1M-$10M, $10M-$50M, $50M-$100M, $100M-$500M, $500M-$1B, $1B-$10B, $10B+")
-- **Age Range** (HubSpot picklist — e.g., "18-24, 25-34, 35-44, 45-54, 55-64, 65+")
-- **Interests** (semicolon-separated; longer phrases describing motivations and priorities)
-- **Other** (free text — pain points, buying triggers, market context)
+For each confirmed ICP, populate the HubSpot ICP form fields per the schema in `references/hubspot-icp-fields.md`. Quality bar:
 
-Optional / "extras" not always shown in HubSpot's Create ICP form but useful to keep:
-- **Description** (1–2 sentence summary of the ICP)
-- **Business Type** (operational category like "Multi-Unit Restaurant Chain" or "Healthcare System")
+| Field | Bar |
+|---|---|
+| **Name** | Concrete role + segment, not generic. "K-12 School Nutrition Director" not "School Buyer." |
+| **Job Titles** | 5–10 titles, semicolon-separated. Include senior + mid + procurement variants. Items often contain commas internally (e.g., "Director, Operations / Strategy") — this is why semicolons separate. |
+| **Industry** | 2–4 industry tags. Picklist values where HubSpot enforces them. |
+| **Location** | At least one country/region. US is fine if that's the ICP's primary market. |
+| **Company Size** | 2–4 picklist brackets covering the ICP's typical org size. Default brackets: `1-10, 11-50, 51-200, 201-500, 501-1K, 1K-5K, 5K-10K, 10K-50K, 50K-100K, 100K+` |
+| **Revenue** | 2–4 picklist brackets. Default brackets: `Less than $1M, $1M-$10M, $10M-$50M, $50M-$100M, $100M-$500M, $500M-$1B, $1B-$10B, $10B+` |
+| **Age Range** | Buyer age (decision-maker), not end-customer. Default brackets: `18-24, 25-34, 35-44, 45-54, 55-64, 65+`. Most B2B ICPs are 35-54. |
+| **Interests** | 5–7 specific phrases describing buying motivations, decision drivers, segment-specific concerns. Items often contain commas — semicolon-separate. |
+| **Other** | Structured free text with three sections: `PAIN POINTS:` (operational frictions), `BUYING TRIGGERS:` (events that prompt purchase), `DECISION CONTEXT:` (who decides, what they evaluate, what wins). |
 
-See `references/hubspot-icp-fields.md` for the field map and picklist values.
+Plus the two extras (not in HubSpot's Create ICP form but useful for AI context downstream):
+- **Description** — 1–2 sentence summary of who this ICP is and why they buy
+- **Business Type** — operational category (e.g., "Multi-Unit Restaurant Chain", "Healthcare System")
 
 ### Phase ICP-3: Generate ICP outputs
 
-1. **CSV source** — `output/[client-slug]-icps.csv`. The build script reads this.
-2. **HTML paste sheet** — Run `scripts/build_icp_html.py [client-slug]-icps.csv` → `output/[client-slug]-icps.html`.
+**1. Write the CSV** at `output/[client-slug]-icps.csv` with this exact header (column order matters — the build script reads by column name):
 
-The HTML uses semicolon-separated text + single-Copy buttons for: Job Titles, Industry, Company Size, Revenue, Age Range, Interests. Location renders as click-to-copy pills (HubSpot's Location field accepts country tags individually).
+```
+"Grouping","Category","Name","Description","Business Type","Job Titles","Industry","Location","Company Size","Revenue","Age Range","Interests","Other","Slug"
+```
 
-Open the HTML in the default browser.
+Quote every cell. Newlines inside cells are fine if they're inside the quoted string. `Slug` is `slugify(Name)` — lowercase, hyphens for spaces, no punctuation.
+
+`Grouping` and `Category` are display-only labels (e.g., Grouping = the client's industry; Category = "End-User Operator", "Channel Partner", or "Specifier").
+
+**2. Build the HTML paste sheet:**
+
+```
+python scripts/build_icp_html.py output/[client-slug]-icps.csv output/[client-slug]-icps.html
+```
+
+Click-to-copy renders:
+- **Location** as click-to-copy pills (HubSpot's Location field is one-tag-at-a-time)
+- **Job Titles, Industry, Company Size, Revenue, Age Range, Interests** as semicolon-separated text with single Copy buttons
+- **Name, Other, Description, Business Type** as single Copy buttons (long-form text)
+
+**3. Open the HTML in the default browser.**
+
+**4. Hand off** — print a short summary: ICP count, fields-per-ICP synthesized count, fields flagged for client input, and any ICPs the user might want to add/drop after seeing them rendered.
 
 ## Branding
 
-The build scripts ship with a **neutral default palette** (clean grayscale + a single accent color, no embedded logo). To override with your own brand:
-- Edit the `BRAND` config dict at the top of each build script (palette, fonts, optional logo data URI).
-- See `templates/brand-override.example.py` for an annotated branded override and the minimal-neutral default side-by-side.
+The build scripts ship with the **CS2 brand by default** (Chad Stamm — author/maintainer brand: terracotta + Yankee blue + Sand + Signature teal, Montserrat + Open Sans). The output looks editorial out of the box.
+
+To override with your own brand:
+- Drop a `brand-override.local.py` in your working directory. The build scripts auto-load it.
+- See `templates/brand-override.example.py` for the override structure (color palette, fonts, optional Google Fonts URL, optional logo).
 
 ## Notes
 

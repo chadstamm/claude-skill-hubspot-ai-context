@@ -68,6 +68,10 @@ For each run, the skill writes outputs into `output/` in your current working di
 
 The HTMLs auto-open in your default browser at the end of the run.
 
+## Pair with
+
+- **[RUMO](https://withrumo.com)** — Give your AI direction. RUMO generates rich AI context files for the people, projects, and brands you work with. Drop a RUMO export into your working directory and pass it as the client folder — `hubspot-ai-context` reads it the same way it reads any other context file. Saves you the intake interview, sharpens every synthesized field.
+
 ## Customize for your industry
 
 The skill is industry-neutral by default. To improve research quality for the industries you work in:
