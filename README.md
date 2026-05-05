@@ -124,6 +124,12 @@ claude-skill-hubspot-ai-context/
 
 If you build industry-specific extensions (directory mappings, ICP libraries for a vertical, brand overrides), consider opening a PR. The skill works better the more industries it knows.
 
+## Show your support
+
+If this skill saved you time on a HubSpot context buildout, drop a ⭐ on the repo — it helps other HubSpot agencies and operators find it.
+
+Built by [Chad Stamm](https://github.com/chadstamm) · [LinkedIn](https://www.linkedin.com/in/chadstamm) · [chadstamm.com](https://chadstamm.com)
+
 ## License
 
 MIT — see LICENSE.
