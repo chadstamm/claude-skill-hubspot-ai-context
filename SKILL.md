@@ -274,7 +274,7 @@ The skill produces **one tabbed HTML paste sheet** with three tabs (color-coded 
 
 - **Tab 1 — Business** (terracotta accent): Identity & classification, Location & scale, Business profile (all 10 fields), Market & ecosystem context, Tech stack, Products & services (one click-to-copy card per product)
 - **Tab 2 — Customers** (rumo-blue accent): ICPs (one card per ICP, 10 fields per card) + Personas (one card per persona, 4 fields per card)
-- **Tab 3 — Brand Kit** (signature teal accent): Personality, Default Tone, Mission, Terms to Avoid, Replacement Rules + Open Items
+- **Tab 3 — Brand Kit** (Algarve teal accent): Personality, Default Tone, Mission, Terms to Avoid, Replacement Rules + Open Items
 
 Tabs map to HubSpot's UI grouping (Business / Customers / external Brand Kit). Each tab is independently scrollable; alternating accent colors signal which tab is active.
 
@@ -402,7 +402,7 @@ Click-to-copy renders within Tab 2 Persona cards:
 
 ## Branding
 
-The build scripts ship with the **CS2 brand by default** (Chad Stamm — author/maintainer brand: signature teal accent + Yankee blue text + cool paper background, Montserrat + Open Sans). The output is editorial and visually distinct from any common client brand (deliberately not orange-on-warm-sand, which is TMC's territory).
+The build scripts ship with the **CS2 brand by default** (Chad Stamm — author/maintainer brand: Algarve teal accent + RUMO blue text + warm sand background, Montserrat + Open Sans). The output is editorial and visually distinct from any common client brand (deliberately not the orange-on-warm-sand that reads as a generic marketing-agency palette).
 
 ### CRITICAL RULE — DO NOT AUTO-CREATE BRAND OVERRIDES
 
@@ -415,11 +415,11 @@ This rule exists because:
 
 **Specifically forbidden actions during any skill run:**
 - Writing a `brand-override.local.py` file anywhere
-- Labeling output markdown source files with a brand other than CS2 (e.g., `**Brand:** TMC` is forbidden unless the user explicitly requested TMC branding via passing their own override)
+- Labeling output markdown source files with a brand other than CS2 (e.g., `**Brand:** YourCompany` is forbidden unless the user explicitly requested that branding by passing their own override)
 - Inferring brand color choices from memory or CLAUDE.md content
 - "Helpfully" customizing the paste sheet aesthetic based on the client being researched (the client gets HubSpot-formatted data, not branding decisions)
 
-If the user explicitly says *"apply my [TMC / Acme / X] brand to this output"*, then route them to: *"Drop a `brand-override.local.py` in this directory with your color palette and re-run"*, OR ask them to share the override values and write the file ONLY after explicit confirmation. Never infer.
+If the user explicitly says *"apply my [Acme / X] brand to this output"*, then route them to: *"Drop a `brand-override.local.py` in this directory with your color palette and re-run"*, OR ask them to share the override values and write the file ONLY after explicit confirmation. Never infer.
 
 ### Override structure (for users)
 

@@ -3,7 +3,7 @@ Brand override — copy this file as `brand-override.local.py` into the working
 directory where you'll run the skill. The build scripts auto-load it.
 
 The skill ships with the CS2 brand by default (Chad Stamm — author/maintainer
-brand: terracotta + Yankee blue + Sand + Signature teal, Montserrat + Open Sans).
+brand: Algarve teal accent + RUMO blue text + Sand background + terracotta, Montserrat + Open Sans).
 This file shows the override structure. Leave a value at None to inherit the
 default.
 """

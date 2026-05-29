@@ -8,7 +8,7 @@ This is the ground-truth field list. If HubSpot's UI changes again, edit this fi
 **Subtitle:** "Information, facts, and knowledge about your organization that enhances and powers AI across HubSpot."
 **Tab structure:** Business · Customers · Team & Processes (this file covers Business only — Customers fields are in `hubspot-icp-fields.md` and `hubspot-persona-fields.md`; Team & Processes is out of scope for this skill since those fields are per-user, not company-context).
 
-**Last UI capture:** 2026-05-28 (Play & Park Structures used as reference instance).
+**Last UI capture:** 2026-05-28 (verified against a live B2B client portal).
 
 ---
 

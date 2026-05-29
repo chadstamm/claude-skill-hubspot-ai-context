@@ -8,7 +8,7 @@ This is the ground-truth field list. If HubSpot's UI changes again, edit this fi
 **Section description (HubSpot):** "Define the characteristics of your ideal customers."
 **Database structure:** Each ICP is a row in the Ideal Customer Profiles table (columns: Name · Description · Business Type · Updated By · Updated Date · Actions). Click "Add ICP" to open the create form.
 
-**Last UI capture:** 2026-05-28 (verified against Play & Park Structures' 8 existing ICPs from a May 25, 2026 generation run).
+**Last UI capture:** 2026-05-28 (verified against a live B2B client portal's 8 existing ICPs from a May 25, 2026 generation run).
 
 ---
 

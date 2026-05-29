@@ -1,116 +1,113 @@
 {
-  "_comment": "Schema example for a Company Context data dict. Replace placeholder values with synthesized fields from a real client run. The skill protocol writes this file as `output/[slug]-data.json` during Phase 5; the build script consumes it to produce the HTML paste sheet.",
+  "_comment": "Schema example for an AI Context data dict (v0.17 — HubSpot's 2026-05-28 reorg). The skill protocol writes this file as `output/[slug]-data.json` during Phase 5; the build script (build_company_context_html.py) consumes it to produce the Business + Brand Kit tabs of the HTML paste sheet. ICPs and Personas come from separate CSV files passed via --icps and --personas. Every key below maps to a HubSpot AI Context field documented in references/hubspot-company-context-fields.md. Leave a field empty (\"\" or []) when synthesis can't derive it — the build script renders empty fields as a visible [Confirm with client] placeholder rather than dropping them. Never fabricate a value to fill a field.",
 
-  "client_name": "Example Company",
-  "client_slug": "example-company",
-  "domain": "example.com",
-  "research_date": "2026-05-04",
+  "client_name": "Meridian Analytics",
+  "client_slug": "meridian-analytics",
+  "domain": "meridiananalytics.com",
+  "research_date": "2026-05-29",
 
-  "value_proposition": "One-paragraph value proposition pulled from the homepage hero, About page, and product page synthesis. First-person plural (we/our) when the client speaks in first person on their own site. Operational specificity over hype.",
+  "_section_identity": "--- Business tab → Identity and classification ---",
+  "legal_name": "Meridian Analytics, Inc.",
+  "industry": "Business Intelligence Software",
+  "company_type": "Private",
 
-  "pain_points": [
-    ["Pain point one — short label", "One paragraph describing the operator's pain and how the client addresses it. Pull verbatim site language where possible."],
-    ["Pain point two — short label", "Same shape. Aim for 3–5 pain points covering the breadth of the client's offering."],
-    ["Pain point three — short label", "Each pain point should map to a real product/service or capability the client offers."]
+  "_section_location": "--- Business tab → Location and scale ---",
+  "hq_location": "Austin, Texas, United States",
+  "company_size": "51 – 200 employees",
+  "annual_revenue": "$10M-$50M",
+  "founded_year": "2014",
+
+  "_section_profile": "--- Business tab → Business profile (10 fields) ---",
+  "business_description": "One to three sentences describing what the company does and who it serves. First-person plural (we/our) when the client speaks that way on their own site. Operational specificity over hype.",
+  "unique_value_propositions": [
+    "One UVP per tag — 10-15 tags typical",
+    "Self-serve onboarding with no implementation fee",
+    "Native warehouse connectors for Snowflake and BigQuery",
+    "SOC 2 Type II certified"
+  ],
+  "business_model": "Subscription SaaS with usage-based tiers and annual contracts.",
+  "primary_business_goal": "Help mid-market teams make decisions from their own data without a data-engineering hire.",
+  "mission": "Business-profile Mission, one paragraph capped at 50 words. May differ from the Brand Kit Mission below — HubSpot treats the two surfaces independently.",
+  "mission_brandkit": "Brand Kit Mission (≤ 50 words). Optional — if present, the Brand Kit tab renders this instead of `mission`. Omit this key entirely to fall back to `mission` for both surfaces.",
+  "vision": "Aspirational future-state statement. NEW field in the 2026-05-28 reorg, separate from Mission. Pull from About or leadership pages.",
+  "social_responsibility": [
+    "Each social-cause or community-impact theme as one tag — 8-12 typical",
+    "Annual open-source data grants",
+    "Carbon-neutral cloud commitment"
+  ],
+  "nps_score": "",
+  "positive_associations": [
+    "From Phase 3.5 positive findings — testimonials, trade-press wins, third-party praise",
+    "Responsive support consistently praised in reviews",
+    "Fast time-to-value"
+  ],
+  "negative_associations": [
+    "From Phase 3.5 negative findings — complaints, friction signals",
+    "Pricing opacity above the top published tier (recurring G2 complaint)",
+    "If nothing surfaces after a thorough pass, write: No significant negative associations found in public web as of [Month YYYY]"
   ],
 
-  "products": [
+  "_section_market": "--- Business tab → Market and ecosystem context ---",
+  "main_competitors": [
+    "From Phase 3.5 — 5-10 typical",
+    "Looker",
+    "Mode Analytics",
+    "Metabase"
+  ],
+  "stakeholders": [
+    "NEW field — non-competitor parties that influence the business",
+    "Parent company / investors",
+    "Cloud-warehouse partners (Snowflake, Google)",
+    "SOC 2 auditor"
+  ],
+
+  "_section_tech": "--- Business tab → Technology stack ---",
+  "existing_apps_and_tools": [
+    "Business-facing apps the company uses or integrates",
+    "Salesforce",
+    "Slack",
+    "HubSpot"
+  ],
+  "tech_stack_key_tools": [
+    "Web/cloud infrastructure — Breeze auto-detects these, often lowercase_with_underscores",
+    "aws",
+    "react",
+    "postgresql"
+  ],
+
+  "_section_products": "--- Business tab → Products and services (structured DB, one record per product) ---",
+  "products_db": [
     {
-      "title": "Category 1: [Product or Service Category Name]",
-      "url": "https://example.com/category-1-detail-page",
-      "models": "Specific model numbers, line names, or SKU families if applicable",
-      "blurb": "Operational description of the category — what's in it, who buys it, key specs. Match the depth a sales engineer would write, not a homepage hero."
+      "name": "Meridian Dashboards",
+      "description": "Concise descriptor-style text — what the product is and what it does, in one line to one short paragraph. The full per-product depth lives in output/[slug]-products.md.",
+      "category": "Analytics",
+      "url": "https://meridiananalytics.com/products/dashboards"
     },
     {
-      "title": "Category 2: [Another Category]",
-      "url": "https://example.com/category-2-detail-page",
-      "models": "Models in this category",
-      "blurb": "Description of category 2."
+      "name": "Meridian Pipelines",
+      "description": "Managed ETL connectors that sync source systems into the customer's warehouse on a schedule.",
+      "category": "Data integration",
+      "url": "https://meridiananalytics.com/products/pipelines"
     }
   ],
 
+  "_section_brandkit": "--- Brand Kit tab (HubSpot's separate Brand Kit surface, linked from the Business tab) ---",
   "personality": ["Authentic", "Helpful", "Innovative", "Trustworthy"],
-  "personality_note": "All 4 picks must come from HubSpot's Personality picklist (see references/hubspot-company-context-fields.md). Common LLM-invented picks like 'Knowledgeable' or 'Direct' are NOT in the picklist.",
-
   "default_tone": ["Conversational", "Confident", "Informative", "Matter-of-fact"],
-  "default_tone_note": "All 4 picks must come from HubSpot's Default Tone picklist. Note that 'Direct' is NOT in the picklist — closest analogues are Straightforward, Matter-of-fact, Assertive.",
-
-  "mission": "One paragraph mission statement, capped at 50 words. Pull from the About page or footer if present; otherwise synthesize from value-prop signals.",
-
-  "terms_to_avoid": ["term-one", "term-two", "term-three"],
-  "terms_note": "Word count: count up to 20 words. Add notes about why specific terms are excluded (e.g., 'X is intentionally NOT on this list because it's in the brand tagline').",
-
+  "terms_to_avoid": ["synergy", "leverage", "disrupt"],
   "replacement_rules": [
     {"from": "incorrect_name_variant", "to": "Correct Brand Name"},
-    {"from": "another_variant", "to": "Correct Brand Name"}
+    {"from": "meridian analytics", "to": "Meridian Analytics"}
   ],
   "replacement_note": "Notes on when these rules should fire (e.g., speech-to-text artifacts from internal calls render the brand as X; auto-correct to Y).",
 
-  "industry_classification": [
-    {"field": "Industry", "value": "Title Case Industry", "note": "Title Case override of any Breeze ALL_CAPS_UNDERSCORE format"},
-    {"field": "Sub-Industry", "value": "Title Case Sub-Industry", "note": "Override Breeze if it miscategorizes"},
-    {"field": "Industry Group", "value": "Title Case Industry Group", "note": "Reflect what the company DOES, not what their customers sell"},
-    {"field": "Business Sector", "value": "Industrials", "note": "Common values: Consumer Discretionary, Consumer Staples, Industrials, Technology, etc."}
-  ],
-
-  "industry_tags": ["b2b", "your_industry", "your_subcategory", "your_market_segment"],
-
-  "positive_associations": [
-    "Strong reputation marker pulled from testimonials, reviews, About-page language",
-    "Operational competency marker (years in business, geographic depth, specialization)",
-    "Differentiator that customers actually mention"
-  ],
-
-  "negative_associations_note": "No significant negative associations found in public web as of [Month YYYY]. Surfaces checked: general web search, Trustpilot, Yelp, BBB-style listings, industry trade press. Caveats: Reddit subforums, Glassdoor, LinkedIn employee posts, BBB direct, and Google Business reviews are not deeply covered by automated WebSearch — for full confidence, manual scan of these surfaces would close the gap.",
-
-  "competitive_advantages": [
-    "Capability or differentiator one",
-    "Capability or differentiator two",
-    "Capability or differentiator three"
-  ],
-
-  "competitors": [
-    {
-      "name": "Competitor One Name",
-      "domain": "www.competitor-one.com",
-      "areas": ["Product Features", "Distribution", "Target Market", "Geographic Coverage"],
-      "note": "Why they compete. Territory or category overlap. Any flag (also-customer, also-partner) if applicable."
-    },
-    {
-      "name": "Competitor Two Name",
-      "domain": "www.competitor-two.com",
-      "areas": ["Brand Recognition", "Distribution", "Pricing"],
-      "note": "Why they compete."
-    }
-  ],
-  "competitors_note": "Researched against [industry directory] + web search [Month YYYY]. Validated against any client-provided competitor knowledge. Flag any competitive lanes (e.g., 'rep-side competitors compete on manufacturer specs; distributor-side competitors compete on operator fulfillment').",
-
-  "content_topics": [
-    "Topic 1 the client publishes about regularly",
-    "Topic 2",
-    "Topic 3"
-  ],
-
-  "content_formats": [
-    "Long-form blog posts (800-1500 words)",
-    "FAQ sections",
-    "Email nurture campaigns",
-    "Social posts",
-    "Case studies"
-  ],
-
-  "technologies": ["HubSpot", "Their CRM", "Their CMS", "Other Tools"],
-  "tech_note": "Notes on tech stack peculiarities, integrations, custom-built tools.",
-  "tech_categories": ["CRM", "Marketing Automation", "CMS", "ERP"],
-
-  "social_causes": "What community/social initiatives the client supports. None explicit on the website is a valid finding.",
-  "sustainability": "Sustainability claims or initiatives. None explicit is a valid finding.",
-
+  "_section_openitems": "--- Brand Kit tab → Open Items (client-confirm checklist) ---",
   "open_items": [
-    "<strong>NPS</strong> — actual score from the client",
-    "<strong>Inclusivity preferences</strong> — confirm the 3 toggle settings (gender-neutral, cultural, idioms)",
-    "<strong>Picklist validations</strong> — flag any picklist values that may need closest-fit override against HubSpot's actual UI",
-    "<strong>Replacement rules scope</strong> — confirm where auto-correction should fire (drafts, publish, both)",
+    "<strong>NPS score</strong> — actual score from the client (not derivable from the website)",
+    "<strong>Annual revenue</strong> — confirm for private companies",
+    "<strong>Inclusivity preferences</strong> — confirm the 3 Brand Kit toggle settings (gender-neutral, cultural, idioms)",
+    "<strong>Picklist validations</strong> — flag any Personality / Default Tone / Company size / Annual revenue values that may need closest-fit override against HubSpot's actual UI",
+    "<strong>Mission sync</strong> — confirm whether the Business-profile Mission and Brand Kit Mission should match or differ",
     "<strong>Anything specific to this client</strong> — open data gaps the client must close"
   ]
 }

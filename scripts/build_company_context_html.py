@@ -690,7 +690,7 @@ def build_html(data: dict, brand: SimpleNamespace, icps: list = None, personas: 
     brand_voice_sections = [
         render_pill_field("Personality (HubSpot picklist — max 4)", data.get("personality", [])),
         render_pill_field("Default Tone (HubSpot picklist — max 4)", data.get("default_tone", [])),
-        render_text_field("Mission (≤ 50 words)", data.get("mission", "")),
+        render_text_field("Mission (≤ 50 words)", data.get("mission_brandkit") or data.get("mission", "")),
         render_pill_field("Terms to Avoid (≤ 20 words)", data.get("terms_to_avoid", [])),
         render_replacement_rules(data.get("replacement_rules", []), data.get("replacement_note", "")),
     ]
@@ -1061,15 +1061,15 @@ button:focus-visible, a:focus-visible {{
   height: 3px; background: transparent;
   transition: background 200ms var(--ease);
 }}
-/* Tab 1 — Products & Services — terracotta */
-.tab-button[data-tab="products"].is-active {{ color: var(--accent); }}
-.tab-button[data-tab="products"].is-active::after {{ background: var(--accent); }}
-/* Tab — Brand Kit — tile blue */
-.tab-button[data-tab="brand"].is-active {{ color: var(--tile); }}
-.tab-button[data-tab="brand"].is-active::after {{ background: var(--tile); }}
-/* Tab 3 — ICPs — signature teal */
-.tab-button[data-tab="icps"].is-active {{ color: var(--success); }}
-.tab-button[data-tab="icps"].is-active::after {{ background: var(--success); }}
+/* Tab 1 — Business — terracotta */
+.tab-button[data-tab="business"].is-active {{ color: var(--success); }}
+.tab-button[data-tab="business"].is-active::after {{ background: var(--success); }}
+/* Tab 2 — Customers — rumo blue */
+.tab-button[data-tab="customers"].is-active {{ color: var(--rumo); }}
+.tab-button[data-tab="customers"].is-active::after {{ background: var(--rumo); }}
+/* Tab 3 — Brand Kit — Algarve teal */
+.tab-button[data-tab="brand"].is-active {{ color: var(--accent); }}
+.tab-button[data-tab="brand"].is-active::after {{ background: var(--accent); }}
 
 .tab-panel {{ display: none; animation: tab-fade-in 280ms var(--ease); }}
 .tab-panel.is-active {{ display: block; }}
@@ -1078,15 +1078,23 @@ button:focus-visible, a:focus-visible {{
   to {{ opacity: 1; transform: translateY(0); }}
 }}
 
-/* When the brand tab is active, recolor field card stripes + section labels to tile */
-.tab-panel[data-tab-panel="brand"].is-active .field::before {{ background: var(--tile); }}
-.tab-panel[data-tab-panel="brand"].is-active .field-label {{ color: var(--tile); }}
-.tab-panel[data-tab-panel="brand"].is-active .field-label::after {{ background: var(--tile-line); }}
+/* Business tab active — terracotta field stripes, labels, section rules */
+.tab-panel[data-tab-panel="business"].is-active .field::before {{ background: var(--success); }}
+.tab-panel[data-tab-panel="business"].is-active .field-label {{ color: var(--success); }}
+.tab-panel[data-tab-panel="business"].is-active .field-label::after {{ background: color-mix(in srgb, var(--success) 22%, transparent); }}
+.tab-panel[data-tab-panel="business"].is-active .tab-section-title::before {{ background: var(--success); }}
 
-/* When the ICPs tab is active, recolor field card stripes + section labels to teal */
-.tab-panel[data-tab-panel="icps"].is-active .icp::before {{ background: var(--success); }}
-.tab-panel[data-tab-panel="icps"].is-active .field-label {{ color: var(--rumo); }}
-.tab-panel[data-tab-panel="icps"].is-active .field-label::after {{ background: var(--rumo-line); }}
+/* Customers tab active — rumo-blue ICP + Persona card stripes, labels, section rules */
+.tab-panel[data-tab-panel="customers"].is-active .icp::before,
+.tab-panel[data-tab-panel="customers"].is-active .persona::before {{ background: var(--rumo); }}
+.tab-panel[data-tab-panel="customers"].is-active .field-label {{ color: var(--rumo); }}
+.tab-panel[data-tab-panel="customers"].is-active .field-label::after {{ background: var(--rumo-line); }}
+.tab-panel[data-tab-panel="customers"].is-active .tab-section-title::before {{ background: var(--rumo); }}
+
+/* Brand Kit tab active — Algarve teal field stripes + labels */
+.tab-panel[data-tab-panel="brand"].is-active .field::before {{ background: var(--accent); }}
+.tab-panel[data-tab-panel="brand"].is-active .field-label {{ color: var(--accent); }}
+.tab-panel[data-tab-panel="brand"].is-active .field-label::after {{ background: var(--accent-line); }}
 
 .tab-section-title {{
   font-family: var(--serif); font-size: clamp(22px, 2.4vw, 30px);
@@ -1155,6 +1163,48 @@ button:focus-visible, a:focus-visible {{
 }}
 .icp .field::before {{ display: none; }}
 .icp .field:last-child {{ border-bottom: none; padding-bottom: 0; }}
+
+/* ============= PERSONA CARDS ============= */
+/* Personas sit on the Customers tab below ICPs. Same card chrome as ICPs but a
+   slightly smaller h3 title to read as a sub-unit of its parent ICP. */
+.persona {{
+  position: relative; background: var(--paper);
+  padding: 32px 36px 28px 40px; margin-bottom: 16px;
+  border: 1px solid var(--rule); border-radius: 4px;
+  box-shadow: var(--lift-1);
+  transition: box-shadow 280ms var(--ease);
+}}
+.persona::before {{
+  content: ''; position: absolute;
+  top: 32px; bottom: 32px; left: 0; width: 3px;
+  background: var(--rumo); border-radius: 0 2px 2px 0;
+  transition: top 280ms var(--ease), bottom 280ms var(--ease);
+}}
+.persona:hover {{ box-shadow: var(--lift-2); }}
+.persona:hover::before {{ top: 24px; bottom: 24px; }}
+.persona-header {{
+  display: flex; align-items: center; gap: 18px;
+  padding-bottom: 18px; margin-bottom: 22px;
+  border-bottom: 1px solid var(--rule);
+}}
+.persona-titles {{ flex: 1; }}
+.persona-titles h3 {{
+  font-family: var(--serif); font-weight: 700;
+  font-size: 19px; letter-spacing: -0.01em; color: var(--ink);
+}}
+.persona-meta {{
+  font-family: var(--serif); font-size: 10px; font-weight: 600;
+  color: var(--ink-mute); margin-top: 4px;
+  text-transform: uppercase; letter-spacing: 0.18em;
+}}
+.persona-header .copy-all {{ margin-left: auto; }}
+.persona .field {{
+  background: transparent; box-shadow: none; border: none;
+  padding: 18px 0; margin-bottom: 0;
+  border-bottom: 1px dashed var(--rule); border-radius: 0;
+}}
+.persona .field::before {{ display: none; }}
+.persona .field:last-child {{ border-bottom: none; padding-bottom: 0; }}
 
 @media (max-width: 720px) {{
   body {{ padding: 32px 16px 48px; }}
@@ -1360,6 +1410,11 @@ def main():
             print(f"Warning: Personas CSV not found: {persona_path} — generating without Personas.", file=sys.stderr)
         else:
             personas = load_personas(persona_path)
+
+    # Surface non-blocking structural warnings about Persona records (dangling
+    # Source ICP refs, Job Titles count outside the documented 1-3 range) before
+    # the build. Warnings go to stderr; the build proceeds regardless.
+    validate_persona_records(icps, personas)
 
     if args.output_path:
         out_path = Path(args.output_path)
