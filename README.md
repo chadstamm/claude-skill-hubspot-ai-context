@@ -112,8 +112,7 @@ claude-skill-hubspot-ai-context/
 │   ├── hubspot-icp-fields.md              # Field map for ICPs
 │   └── industry-directories.md            # User-extensible competitor research map
 ├── scripts/
-│   ├── build_company_context_html.py      # Render Company Context paste sheet
-│   └── build_icp_html.py                  # Render ICP paste sheet
+│   └── build_company_context_html.py      # Render Company Context paste sheet
 └── templates/
     ├── company-context-data.example.json  # Schema for Company Context input
     ├── icp-library.example.csv            # Schema for ICP CSV input

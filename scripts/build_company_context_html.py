@@ -303,10 +303,6 @@ def render_open_items(items: list) -> str:
 
 
 # ---------------------------------------------------------------------------
-# ICP rendering (for the third tab) — mirrors build_icp_html.py logic
-# ---------------------------------------------------------------------------
-
-# ---------------------------------------------------------------------------
 # ICP rendering — updated 2026-05-28 for new HubSpot Customers tab → Create ICP form
 # ---------------------------------------------------------------------------
 # CSV column names mirror HubSpot's form labels exactly. The "Other" field is
