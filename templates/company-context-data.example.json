@@ -101,6 +101,20 @@
   ],
   "replacement_note": "Notes on when these rules should fire (e.g., speech-to-text artifacts from internal calls render the brand as X; auto-correct to Y).",
 
+  "_section_brandkit_additional": "--- Brand Kit page \u2192 Additional context (a SEPARATE surface from the Business tab. The Business tab uses a SINGLE Industry field; this page holds the 5-field Industry classification plus crawl-derived subsections. The build script renders these on the Brand Kit tab.) ---",
+  "sub_industry": "Embedded Analytics",
+  "industry_group": "Software & IT Services",
+  "business_sector": "Technology",
+  "industry_related_tags": ["business intelligence", "embedded analytics", "data visualization", "warehouse-native BI"],
+  "competitive_advantages": ["No implementation fee", "Native warehouse connectors for Snowflake and BigQuery", "Self-serve onboarding", "SOC 2 Type II certified"],
+  "content_themes": ["Primary content topics \u2014 e.g., data-driven decision making, warehouse-native analytics, self-serve BI"],
+  "content_format_types": ["Blog posts", "Case studies", "Webinars", "Docs & guides", "Product videos"],
+  "technologies": ["HubSpot", "Google Analytics", "Segment"],
+  "technology_categories": ["Marketing Automation", "CRM", "Web Analytics", "CDP"],
+  "supported_social_causes": ["Open-source data grants", "STEM education partnerships"],
+  "sustainability_initiatives": ["Carbon-neutral cloud commitment", "Remote-first low-footprint operations"],
+  "inclusivity": ["Use gender-neutral nouns and pronouns when the subject's gender is unknown or not relevant", "Avoid cultural or religious references"],
+
   "_section_openitems": "--- Brand Kit tab → Open Items (client-confirm checklist) ---",
   "open_items": [
     "<strong>NPS score</strong> — actual score from the client (not derivable from the website)",

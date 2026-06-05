@@ -257,6 +257,13 @@ Walk every field in `references/hubspot-company-context-fields.md` in the sectio
    - Technology stack (key tools) (multi-tag — Breeze auto-detect + manual)
 7. **Products and services** (Business tab — structured DB):
    - One record per product. Each record: Name (required) · Description (concise descriptor style) · Category (1–2 word category)
+8. **Brand Kit page → Additional context** (the "Manage Brand Kits" surface; renders on the paste-sheet Brand Kit tab — a DISTINCT surface from the Business-tab fields above. See the 2026-06-05 correction in `references/hubspot-company-context-fields.md`; data keys in `templates/company-context-data.example.json`):
+   - **Industry classification** (5 fields): Industry, Sub-industry (`sub_industry`), Industry group (`industry_group`), Business sector (`business_sector`), Industry-related tags (`industry_related_tags`). *(The Business-tab Identity keeps a single Industry; this surface holds all five.)*
+   - **Customer sentiment**: NPS, Positive associations, Negative associations (same data as Business profile)
+   - **Competitive landscape**: Competitive advantages (`competitive_advantages`), Main competitors
+   - **Content themes**: Primary content topics (`content_themes`), Content format types (`content_format_types`)
+   - **Tech stack**: Technologies (`technologies`), Technology categories (`technology_categories`)
+   - **Social responsibility**: Supported social causes (`supported_social_causes`), Sustainability initiatives (`sustainability_initiatives`)
 
 Always-flag fields (cannot be derived without the client):
 - **NPS score** — client-only data

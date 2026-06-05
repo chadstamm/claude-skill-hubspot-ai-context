@@ -580,6 +580,18 @@ def build_html(data: dict, brand: SimpleNamespace, icps: list = None, personas: 
         render_text_field("Industry", data.get("industry", "")),
         render_text_field("Type (Public / Private)", data.get("company_type", "")),
     ]
+    industry_class_sections = [
+        render_text_field("Industry", data.get("industry", "")),
+        render_text_field("Sub-industry", data.get("sub_industry", "")),
+        render_text_field("Industry group", data.get("industry_group", "")),
+        render_text_field("Business sector", data.get("business_sector", "")),
+        render_pill_field("Industry-related tags", data.get("industry_related_tags", [])),
+    ]
+    customer_sentiment_sections = [
+        render_text_field("NPS score", data.get("nps_score", "")),
+        render_pill_field("Positive associations", data.get("positive_associations", [])),
+        render_pill_field("Negative associations", data.get("negative_associations", [])),
+    ]
 
     # Every field renders regardless of whether the synthesis found data —
     # empty values get a "[Confirm with client]" placeholder from
@@ -607,13 +619,19 @@ def build_html(data: dict, brand: SimpleNamespace, icps: list = None, personas: 
     ]
 
     market_sections = [
+        render_pill_field("Competitive advantages", data.get("competitive_advantages", [])),
         render_pill_field("Main competitors", data.get("main_competitors", [])),
-        render_pill_field("Stakeholders", data.get("stakeholders", [])),
     ]
 
     tech_sections = [
         render_pill_field("Existing apps and tools", data.get("existing_apps_and_tools", [])),
         render_pill_field("Technology stack (key tools)", data.get("tech_stack_key_tools", [])),
+    ]
+
+    # Market and ecosystem context (Business tab structured section): Main competitors + Stakeholders
+    market_eco_sections = [
+        render_pill_field("Main competitors", data.get("main_competitors", [])),
+        render_pill_field("Stakeholders", data.get("stakeholders", [])),
     ]
 
     # Products and services: structured DB. One card per product.
@@ -644,7 +662,7 @@ def build_html(data: dict, brand: SimpleNamespace, icps: list = None, personas: 
         + '<h2 class="tab-section-title">Business profile</h2>'
         + "\n".join(s for s in business_profile_sections if s)
         + '<h2 class="tab-section-title">Market and ecosystem context</h2>'
-        + "\n".join(s for s in market_sections if s)
+        + "\n".join(s for s in market_eco_sections if s)
         + '<h2 class="tab-section-title">Technology stack</h2>'
         + "\n".join(s for s in tech_sections if s)
         + '<h2 class="tab-section-title">Products and services</h2>'
@@ -689,12 +707,32 @@ def build_html(data: dict, brand: SimpleNamespace, icps: list = None, personas: 
         render_text_field("Mission (≤ 50 words)", data.get("mission_brandkit") or data.get("mission", "")),
         render_pill_field("Terms to Avoid (≤ 20 words)", data.get("terms_to_avoid", [])),
         render_replacement_rules(data.get("replacement_rules", []), data.get("replacement_note", "")),
+        render_pill_field("Inclusivity", data.get("inclusivity", [])),
     ]
     open_items_html = render_open_items(data.get("open_items", []))
+    addl = (
+        '<h2 class="tab-section-title">Additional context</h2>'
+        '<div class="field-hint">Crawl-derived knowledge — in HubSpot these sit under "Additional context" beneath Brand voice.</div>'
+        + '<h3 class="tab-section-title" style="font-size:16px;margin-top:28px">Industry classification</h3>'
+        + "\n".join(s for s in industry_class_sections if s)
+        + '<h3 class="tab-section-title" style="font-size:16px;margin-top:28px">Customer sentiment</h3>'
+        + "\n".join(s for s in customer_sentiment_sections if s)
+        + '<h3 class="tab-section-title" style="font-size:16px;margin-top:28px">Competitive landscape</h3>'
+        + "\n".join(s for s in market_sections if s)
+        + '<h3 class="tab-section-title" style="font-size:16px;margin-top:28px">Content themes</h3>'
+        + (render_pill_field("Primary content topics", data.get("content_themes", [])) or "")
+        + (render_pill_field("Content format types", data.get("content_format_types", [])) or "")
+        + '<h3 class="tab-section-title" style="font-size:16px;margin-top:28px">Tech stack</h3>'
+        + (render_pill_field("Technologies", data.get("technologies", [])) or "")
+        + (render_pill_field("Technology categories", data.get("technology_categories", [])) or "")
+        + '<h3 class="tab-section-title" style="font-size:16px;margin-top:28px">Social responsibility</h3>'
+        + (render_pill_field("Supported social causes", data.get("supported_social_causes", [])) or "")
+        + (render_pill_field("Sustainability initiatives", data.get("sustainability_initiatives", [])) or "")
+    )
     tab_brand = (
-        '<div class="field-hint">HubSpot moved Brand Kit to a separate management surface, '
-        'linked from the Business tab via "Manage Brand Kits". Paste these into that surface.</div>'
+        '<div class="field-hint">Brand voice + Additional context — together on HubSpot\'s Brand Kit surface.</div>'
         + "\n".join(s for s in brand_voice_sections if s)
+        + addl
         + (open_items_html if open_items_html else "")
     )
 

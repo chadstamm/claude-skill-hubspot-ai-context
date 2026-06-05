@@ -12,6 +12,37 @@ This is the ground-truth field list. If HubSpot's UI changes again, edit this fi
 
 ---
 
+## ⚠ 2026-06-05 CORRECTION — live UI verified
+
+The live AI Context UI spans TWO surfaces. Verified against a live client portal; the build script (`scripts/build_company_context_html.py`) renders both. This overrides any conflicting claim below.
+
+**Surface 1 — AI Context page → Business tab** (structured Edit-card sections, top to bottom):
+1. **Brand Kits** (visual brand-kit list; "Manage Brand Kits" link).
+2. **Identity and classification** — Name (Legal name), Domain, **Industry (SINGLE field)**, Type (Public/Private).
+3. **Location and scale** — Headquarters location, Company size, Annual revenue, Founded year.
+4. **Business profile** — Business description, Unique value propositions, Business model, Primary business goal, Mission, Vision, **Social responsibility**, **Customer sentiment** (NPS + Positive associations + Negative associations).
+5. **Market and ecosystem context** — Main competitors, **Stakeholders**.
+6. **Technology stack** — Existing apps and tools, Technology stack (key tools).
+7. **Products and services** — per-product Name / Description / Category (paginated DB).
+
+**Surface 2 — Brand Kit page** (opened via "Manage Brand Kits"; = the build script's Brand Kit tab):
+- **Brand voice** — Personality, Default Tone, Mission, Terms to Avoid, Replacement Rules, **Inclusivity**.
+- **Additional context** (crawl-derived; Data / Content / Source columns) — six subsections, DISTINCT from the Business-tab fields:
+  - **Industry classification** — Industry, Sub-industry, Industry group, Business sector, Industry-related tags (the FIVE-field version; the Business tab keeps a single Industry).
+  - **Customer sentiment** — NPS, Positive associations, Negative associations.
+  - **Competitive landscape** — Competitive advantages, Main competitors (Stakeholders is NOT here; it lives in Business-tab Market and ecosystem context).
+  - **Content themes** — Primary content topics, Content format types.
+  - **Tech stack** — Technologies, Technology categories.
+  - **Social responsibility** — Supported social causes, Sustainability initiatives.
+
+**Build-script tab mapping:** Business tab = Identity (single Industry) / Location / Business profile (with Social responsibility + Customer sentiment) / Market and ecosystem context / Technology stack / Products. Brand Kit tab = Brand voice + the six Additional-context subsections.
+
+**Data keys for the Additional-context subsections** (see `templates/company-context-data.example.json`): `sub_industry`, `industry_group`, `business_sector`, `industry_related_tags`, `competitive_advantages`, `content_themes`, `content_format_types`, `technologies`, `technology_categories`, `supported_social_causes`, `sustainability_initiatives`, `inclusivity`.
+
+**Company size picklist (Business tab):** `1 – 10` · `11 – 50` · `51 – 250` · `251 – 1,000` · `1,000 – 5,000` · `5,000 – 10,000` · `10,000 – 50,000` · `50,000 – 100,000` · `100,000+` employees. (ICP-form picklists differ — see `hubspot-icp-fields.md`.)
+
+---
+
 ## Section 1 — Brand Kits
 
 **Location:** Top of Business tab.

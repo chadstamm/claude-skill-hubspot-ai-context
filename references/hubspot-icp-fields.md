@@ -23,9 +23,9 @@ This is the ground-truth field list. If HubSpot's UI changes again, edit this fi
 | 5 | **Interests** | multi-tag (free-form, type+Enter) | No | Buying motivations, decision drivers, segment-specific concerns. 5–7 phrases. Items often contain commas → use semicolons as the safe separator for paste. |
 | 6 | **Industries** | multi-tag (free-form, type+Enter) | No | Industries the ICP operates in. **Plural label** (was singular "Industry" in pre-reorg schema). 2–4 industry tags typical. |
 | 7 | **Locations** | multi-select picklist (by nation) | No | Country/region tags. **Plural label** (was singular "Location"). Click-to-add country tags. **North American foodservice ICPs default to `United States; Canada`.** Hyperscaling / data center ICPs commonly include `United States; Canada; Mexico`. For other industries, default to `United States` if primary, surface as a question if the client's footprint is broader. Multi-select confirmed by Chad 2026-05-28. |
-| 8 | **Company size** | multi-select picklist | No | Bracket format: `11 – 50 employees` (en-dash + " employees" suffix). 2–4 picklist brackets covering the ICP's typical org size. Picklist brackets (verify on first paste, may have changed in reorg): `1-10`, `11-50`, `51-200`, `201-500`, `501-1K`, `1K-5K`, `5K-10K`, `10K-50K`, `50K-100K`, `100K+`. |
-| 9 | **Annual revenue** | multi-select picklist | No | **Renamed from "Revenue".** 2–4 picklist brackets. Picklist brackets (verify on first paste): `Less than $1M`, `$1M-$10M`, `$10M-$50M`, `$50M-$100M`, `$100M-$500M`, `$500M-$1B`, `$1B-$10B`, `$10B+`. |
-| 10 | **Age range** | multi-select picklist | No | Buyer age (decision-maker), not end-customer. Picklist brackets (verify on first paste): `18-24`, `25-34`, `35-44`, `45-54`, `55-64`, `65+`. Most B2B ICPs are 35-54. |
+| 8 | **Company size** | multi-select picklist | No | Bracket format uses `" - "` spacing, abbreviated K, NO "employees" suffix (distinct from the Business-tab Company size). 2–4 brackets covering the ICP's typical org size. Picklist (verified 2026-06-05): `1 - 10`, `11 - 50`, `51 - 250`, `251 - 1K`, `1K - 5K`, `5K - 10K`, `10K - 50K`, `50K - 100K`, `100K+`. |
+| 9 | **Annual revenue** | multi-select picklist | No | **Renamed from "Revenue".** 2–4 brackets, `" - "` spacing. Picklist (verified 2026-06-05): `$0 - $1M`, `$1M - $10M`, `$10M - $50M`, `$50M - $100M`, `$100M - $250M`, `$250M - $500M`, `$500M - $1B`, `$1B - $10B`, `$10B+`. |
+| 10 | **Age range** | multi-select picklist | No | Buyer age (decision-maker), not end-customer. Picklist (verified 2026-06-05): `< 12`, `12 - 17`, `18 - 24`, `25 - 34`, `35 - 44`, `45 - 54`, `55 - 64`, `65+`. Most B2B ICPs are 35-54. |
 
 ## Fields gone from the pre-2026-05-28 schema
 
@@ -52,7 +52,7 @@ For pastable HTML output:
 
 ## Common HubSpot UI quirks
 
-- **Picklist fields require exact matches** — `11 – 50 employees` works (en-dash, " employees" suffix); `11-50` or `11 to 50` may not. Always verify the punctuation HubSpot expects, especially after a UI update.
+- **Picklist fields require exact matches** — the ICP form picklists use `" - "` spacing, abbreviated K, and NO "employees" suffix (e.g., `51 - 250`, `251 - 1K`, `$250M - $500M`) — distinct from the Business-tab Company size (full numbers + " employees"). Match HubSpot's exact option strings.
 - **Job titles, Interests, Industries are free-text type-ahead** but HubSpot may auto-suggest from your portal's existing contact/company database; pasted values bypass suggestions.
 - **Pasting one big string at once** sometimes splits unexpectedly on commas. Semicolon-separated paste is more predictable when items contain internal commas.
 - **Locations is multi-select but the placeholder reads "Select a location"** (singular UI text on a multi-select control). Don't assume single-select from the placeholder.
