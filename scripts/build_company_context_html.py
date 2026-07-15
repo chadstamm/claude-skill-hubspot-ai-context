@@ -618,9 +618,18 @@ def build_html(data: dict, brand: SimpleNamespace, icps: list = None, personas: 
         render_pill_field("Negative associations", data.get("negative_associations", [])),
     ]
 
+    # Main competitors: dict-format entries → structured cards (separate Name / URL / Competitive-Areas
+    # copy buttons via render_competitors); plain strings → flat pills (backward-compatible).
+    _mc = data.get("main_competitors", [])
+    _main_competitors_field = (
+        render_competitors(_mc, data.get("competitors_note", ""))
+        if (_mc and isinstance(_mc[0], dict))
+        else render_pill_field("Main competitors", _mc)
+    )
+
     market_sections = [
         render_pill_field("Competitive advantages", data.get("competitive_advantages", [])),
-        render_pill_field("Main competitors", data.get("main_competitors", [])),
+        _main_competitors_field,
     ]
 
     tech_sections = [
@@ -630,7 +639,7 @@ def build_html(data: dict, brand: SimpleNamespace, icps: list = None, personas: 
 
     # Market and ecosystem context (Business tab structured section): Main competitors + Stakeholders
     market_eco_sections = [
-        render_pill_field("Main competitors", data.get("main_competitors", [])),
+        _main_competitors_field,
         render_pill_field("Stakeholders", data.get("stakeholders", [])),
     ]
 
